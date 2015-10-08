@@ -1,0 +1,15 @@
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\bin\Debug\BowlingScores.exe.config
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\bin\Debug\BowlingScores.exe
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\bin\Debug\BowlingScores.pdb
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\bin\Debug\BowlingScores.xml
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\obj\Debug\BowlingScores.Form1.resources
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\obj\Debug\BowlingScores.Resources.resources
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\obj\Debug\BowlingScores.vbproj.GenerateResource.Cache
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\obj\Debug\BowlingScores.exe
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\obj\Debug\BowlingScores.xml
+c:\users\amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\obj\Debug\BowlingScores.pdb
+C:\Users\Amber\documents\visual studio 2013\Projects\BowlingScores\BowlingScores\obj\Debug\BowlingScores.vbprojResolveAssemblyReference.cache
+C:\Users\Amber\Documents\BowlingScores\BowlingScores\bin\Debug\BowlingScores.exe.config
+C:\Users\Amber\Documents\BowlingScores\BowlingScores\obj\Debug\BowlingScores.exe
+C:\Users\Amber\Documents\BowlingScores\BowlingScores\obj\Debug\BowlingScores.xml
+C:\Users\Amber\Documents\BowlingScores\BowlingScores\obj\Debug\BowlingScores.pdb
