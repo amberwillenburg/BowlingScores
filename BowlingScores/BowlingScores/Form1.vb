@@ -1,5 +1,11 @@
 ﻿Public Class Form1
 
+    'I realize that this code has gotten very complex and long. If I had more time I would rework much
+    'of this to be done with helper functions where the individual GUI components that need to be worked
+    'with will just be passed in instead of writting that code for each one separately. The functionality
+    'should be the same either way, but that would allow for cleaner code that would be easier to read and
+    'follow. I regret not doing that from the very beginning. 
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     End Sub
@@ -339,18 +345,22 @@
                     If spares1.Contains(frame) Then
                         spares1.Remove(frame)
                     End If
+                    framevalues1(frame - 1) = 0
                 ElseIf n = 2 Then
                     If spares2.Contains(frame) Then
                         spares2.Remove(frame)
                     End If
+                    framevalues2(frame - 1) = 0
                 ElseIf n = 3 Then
                     If spares3.Contains(frame) Then
                         spares3.Remove(frame)
                     End If
+                    framevalues3(frame - 1) = 0
                 ElseIf n = 4 Then
                     If spares4.Contains(frame) Then
                         spares4.Remove(frame)
                     End If
+                    framevalues4(frame - 1) = 0
                 Else
                     'this should never happen
                 End If
@@ -361,27 +371,31 @@
                     If strikes1.Contains(frame) Then
                         strikes1.Remove(frame)
                     End If
+                    framevalues1(frame - 1) = 0
                 ElseIf n = 2 Then
                     If strikes2.Contains(frame) Then
                         strikes2.Remove(frame)
                     End If
+                    framevalues2(frame - 1) = 0
                 ElseIf n = 3 Then
                     If strikes3.Contains(frame) Then
                         strikes3.Remove(frame)
                     End If
+                    framevalues3(frame - 1) = 0
                 ElseIf n = 4 Then
                     If strikes4.Contains(frame) Then
                         strikes4.Remove(frame)
                     End If
+                    framevalues4(frame - 1) = 0
                 Else
                     'this should never happen
-                End If  
+                End If
                 Spare(frame, v1, prevbox, XXbox, n)
                 currentbox.Text = ""
             End If
-            Else
-                TenthFrame(v1, v2, v3, currentbox, prevbox, XXbox, n)
-            End If
+        Else
+            TenthFrame(v1, v2, v3, currentbox, prevbox, XXbox, n)
+        End If
         Recalculate(frame, n)
     End Sub
 
@@ -401,23 +415,81 @@
             'entered, nothing passed it is able to.) If we find a frame that has been calculated, then
             'we recalculate the total by calling find total and print the result to the textbox.
             If frame = 1 Then
-                If ComboBox122.SelectedIndex > -1 Then
-                    TextBox12.Text = findTotal(2, 1)
-                    If ComboBox132.SelectedIndex > -1 Then
-                        TextBox13.Text = findTotal(3, 1)
-                        If ComboBox142.SelectedIndex > -1 Then
-                            TextBox14.Text = findTotal(4, 1)
-                            If ComboBox152.SelectedIndex > -1 Then
-                                TextBox15.Text = findTotal(5, 1)
-                                If ComboBox162.SelectedIndex > -1 Then
-                                    TextBox16.Text = findTotal(6, 1)
-                                    If ComboBox172.SelectedIndex > -1 Then
-                                        TextBox17.Text = findTotal(7, 1)
-                                        If ComboBox182.SelectedIndex > -1 Then
-                                            TextBox18.Text = findTotal(8, 1)
-                                            If ComboBox192.SelectedIndex > -1 Then
-                                                TextBox19.Text = findTotal(9, 1)
-                                                If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox121.SelectedIndex > -1 AndAlso ComboBox121.SelectedItem.Equals("X") Or ComboBox122.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox121.SelectedItem
+                        value2 = ComboBox122.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox12, TextBox11, TextBox11, 2, v1, v2, 0, 1)
+                    End If
+                    If Not ((strikes1.Contains(2) Or spares1.Contains(2)) And framevalues1(1) = 0) Then
+                        TextBox12.Text = findTotal(2, 1)
+                    End If
+                    If ComboBox131.SelectedIndex > -1 AndAlso ComboBox131.SelectedItem.Equals("X") Or ComboBox132.SelectedIndex > -1 Then
+                        If strikes1.Contains(frame) And strikes1.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox131.SelectedItem
+                            value2 = ComboBox132.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox13, TextBox12, TextBox11, 3, v1, v2, 0, 1)
+                            If framevalues1(1) > 0 Then
+                                TextBox12.Text = findTotal(2, 1)
+                            End If
+                        End If
+                        If Not ((strikes1.Contains(3) Or spares1.Contains(3)) And framevalues1(2) = 0) Then
+                            TextBox13.Text = findTotal(3, 1)
+                        End If
+                        If ComboBox141.SelectedIndex > -1 AndAlso ComboBox141.SelectedItem.Equals("X") Or ComboBox142.SelectedIndex > -1 Then
+                            If Not ((strikes1.Contains(4) Or spares1.Contains(4)) And framevalues1(3) = 0) Then
+                                TextBox14.Text = findTotal(4, 1)
+                            End If
+                            If ComboBox151.SelectedIndex > -1 AndAlso ComboBox151.SelectedItem.Equals("X") Or ComboBox152.SelectedIndex > -1 Then
+                                If Not ((strikes1.Contains(5) Or spares1.Contains(5)) And framevalues1(4) = 0) Then
+                                    TextBox15.Text = findTotal(5, 1)
+                                End If
+                                If ComboBox161.SelectedIndex > -1 AndAlso ComboBox161.SelectedItem.Equals("X") Or ComboBox162.SelectedIndex > -1 Then
+                                    If Not ((strikes1.Contains(6) Or spares1.Contains(6)) And framevalues1(5) = 0) Then
+                                        TextBox16.Text = findTotal(6, 1)
+                                    End If
+                                    If ComboBox171.SelectedIndex > -1 AndAlso ComboBox171.SelectedItem.Equals("X") Or ComboBox172.SelectedIndex > -1 Then
+                                        If Not ((strikes1.Contains(7) Or spares1.Contains(7)) And framevalues1(6) = 0) Then
+                                            TextBox17.Text = findTotal(7, 1)
+                                        End If
+                                        If ComboBox181.SelectedIndex > -1 AndAlso ComboBox181.SelectedItem.Equals("X") Or ComboBox182.SelectedIndex > -1 Then
+                                            If Not ((strikes1.Contains(8) Or spares1.Contains(8)) And framevalues1(7) = 0) Then
+                                                TextBox18.Text = findTotal(8, 1)
+                                            End If
+                                            If ComboBox191.SelectedIndex > -1 AndAlso ComboBox191.SelectedItem.Equals("X") Or ComboBox192.SelectedIndex > -1 Then
+                                                If Not ((strikes1.Contains(9) Or spares1.Contains(9)) And framevalues1(8) = 0) Then
+                                                    TextBox19.Text = findTotal(9, 1)
+                                                End If
+                                                If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                                                   (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
                                                     TextBox110.Text = findTotal(10, 1)
                                                 End If
                                             End If
@@ -429,21 +501,77 @@
                     End If
                 End If
             ElseIf frame = 2 Then
-                If ComboBox132.SelectedIndex > -1 Then
-                    TextBox13.Text = findTotal(3, 1)
-                    If ComboBox142.SelectedIndex > -1 Then
-                        TextBox14.Text = findTotal(4, 1)
-                        If ComboBox152.SelectedIndex > -1 Then
-                            TextBox15.Text = findTotal(5, 1)
-                            If ComboBox162.SelectedIndex > -1 Then
-                                TextBox16.Text = findTotal(6, 1)
-                                If ComboBox172.SelectedIndex > -1 Then
-                                    TextBox17.Text = findTotal(7, 1)
-                                    If ComboBox182.SelectedIndex > -1 Then
-                                        TextBox18.Text = findTotal(8, 1)
-                                        If ComboBox192.SelectedIndex > -1 Then
-                                            TextBox19.Text = findTotal(9, 1)
-                                            If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox131.SelectedIndex > -1 AndAlso ComboBox131.SelectedItem.Equals("X") Or ComboBox132.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox131.SelectedItem
+                        value2 = ComboBox132.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox13, TextBox12, TextBox11, 3, v1, v2, 0, 1)
+                    End If
+                    If Not ((strikes1.Contains(3) Or spares1.Contains(3)) And framevalues1(2) = 0) Then
+                        TextBox13.Text = findTotal(3, 1)
+                    End If
+                    If ComboBox141.SelectedIndex > -1 AndAlso ComboBox141.SelectedItem.Equals("X") Or ComboBox142.SelectedIndex > -1 Then
+                        If strikes1.Contains(frame) And strikes1.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox141.SelectedItem
+                            value2 = ComboBox142.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox14, TextBox13, TextBox12, 4, v1, v2, 0, 1)
+                            If framevalues1(2) > 0 Then
+                                TextBox13.Text = findTotal(3, 1)
+                            End If
+                        End If
+                        If Not ((strikes1.Contains(4) Or spares1.Contains(4)) And framevalues1(3) = 0) Then
+                            TextBox14.Text = findTotal(4, 1)
+                        End If
+                        If ComboBox151.SelectedIndex > -1 AndAlso ComboBox151.SelectedItem.Equals("X") Or ComboBox152.SelectedIndex > -1 Then
+                            If Not ((strikes1.Contains(5) Or spares1.Contains(5)) And framevalues1(4) = 0) Then
+                                TextBox15.Text = findTotal(5, 1)
+                            End If
+                            If ComboBox161.SelectedIndex > -1 AndAlso ComboBox161.SelectedItem.Equals("X") Or ComboBox162.SelectedIndex > -1 Then
+                                If Not ((strikes1.Contains(6) Or spares1.Contains(6)) And framevalues1(5) = 0) Then
+                                    TextBox16.Text = findTotal(6, 1)
+                                End If
+                                If ComboBox171.SelectedIndex > -1 AndAlso ComboBox171.SelectedItem.Equals("X") Or ComboBox172.SelectedIndex > -1 Then
+                                    If Not ((strikes1.Contains(7) Or spares1.Contains(7)) And framevalues1(6) = 0) Then
+                                        TextBox17.Text = findTotal(7, 1)
+                                    End If
+                                    If ComboBox181.SelectedIndex > -1 AndAlso ComboBox181.SelectedItem.Equals("X") Or ComboBox182.SelectedIndex > -1 Then
+                                        If Not ((strikes1.Contains(8) Or spares1.Contains(8)) And framevalues1(7) = 0) Then
+                                            TextBox18.Text = findTotal(8, 1)
+                                        End If
+                                        If ComboBox191.SelectedIndex > -1 AndAlso ComboBox191.SelectedItem.Equals("X") Or ComboBox192.SelectedIndex > -1 Then
+                                            If Not ((strikes1.Contains(9) Or spares1.Contains(9)) And framevalues1(8) = 0) Then
+                                                TextBox19.Text = findTotal(9, 1)
+                                            End If
+                                            If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                                               (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
                                                 TextBox110.Text = findTotal(10, 1)
                                             End If
                                         End If
@@ -454,19 +582,73 @@
                     End If
                 End If
             ElseIf frame = 3 Then
-                If ComboBox142.SelectedIndex > -1 Then
-                    TextBox14.Text = findTotal(4, 1)
-                    If ComboBox152.SelectedIndex > -1 Then
-                        TextBox15.Text = findTotal(5, 1)
-                        If ComboBox162.SelectedIndex > -1 Then
-                            TextBox16.Text = findTotal(6, 1)
-                            If ComboBox172.SelectedIndex > -1 Then
-                                TextBox17.Text = findTotal(7, 1)
-                                If ComboBox182.SelectedIndex > -1 Then
-                                    TextBox18.Text = findTotal(8, 1)
-                                    If ComboBox192.SelectedIndex > -1 Then
-                                        TextBox19.Text = findTotal(9, 1)
-                                        If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox141.SelectedIndex > -1 AndAlso ComboBox141.SelectedItem.Equals("X") Or ComboBox142.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox141.SelectedItem
+                        value2 = ComboBox142.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox14, TextBox13, TextBox12, 4, v1, v2, 0, 1)
+                    End If
+                    If Not ((strikes1.Contains(4) Or spares1.Contains(4)) And framevalues1(3) = 0) Then
+                        TextBox14.Text = findTotal(4, 1)
+                    End If
+                    If ComboBox151.SelectedIndex > -1 AndAlso ComboBox151.SelectedItem.Equals("X") Or ComboBox152.SelectedIndex > -1 Then
+                        If strikes1.Contains(frame) And strikes1.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox151.SelectedItem
+                            value2 = ComboBox152.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox15, TextBox14, TextBox13, 5, v1, v2, 0, 1)
+                            If framevalues1(3) > 0 Then
+                                TextBox14.Text = findTotal(4, 1)
+                            End If
+                        End If
+                        If Not ((strikes1.Contains(5) Or spares1.Contains(5)) And framevalues1(4) = 0) Then
+                            TextBox15.Text = findTotal(5, 1)
+                        End If
+                        If ComboBox161.SelectedIndex > -1 AndAlso ComboBox161.SelectedItem.Equals("X") Or ComboBox162.SelectedIndex > -1 Then
+                            If Not ((strikes1.Contains(6) Or spares1.Contains(6)) And framevalues1(5) = 0) Then
+                                TextBox16.Text = findTotal(6, 1)
+                            End If
+                            If ComboBox171.SelectedIndex > -1 AndAlso ComboBox171.SelectedItem.Equals("X") Or ComboBox172.SelectedIndex > -1 Then
+                                If Not ((strikes1.Contains(7) Or spares1.Contains(7)) And framevalues1(6) = 0) Then
+                                    TextBox17.Text = findTotal(7, 1)
+                                End If
+                                If ComboBox181.SelectedIndex > -1 AndAlso ComboBox181.SelectedItem.Equals("X") Or ComboBox182.SelectedIndex > -1 Then
+                                    If Not ((strikes1.Contains(8) Or spares1.Contains(8)) And framevalues1(7) = 0) Then
+                                        TextBox18.Text = findTotal(8, 1)
+                                    End If
+                                    If ComboBox191.SelectedIndex > -1 AndAlso ComboBox191.SelectedItem.Equals("X") Or ComboBox192.SelectedIndex > -1 Then
+                                        If Not ((strikes1.Contains(9) Or spares1.Contains(9)) And framevalues1(8) = 0) Then
+                                            TextBox19.Text = findTotal(9, 1)
+                                        End If
+                                        If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                                            (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
                                             TextBox110.Text = findTotal(10, 1)
                                         End If
                                     End If
@@ -476,17 +658,69 @@
                     End If
                 End If
             ElseIf frame = 4 Then
-                If ComboBox152.SelectedIndex > -1 Then
-                    TextBox15.Text = findTotal(5, 1)
-                    If ComboBox162.SelectedIndex > -1 Then
-                        TextBox16.Text = findTotal(6, 1)
-                        If ComboBox172.SelectedIndex > -1 Then
-                            TextBox17.Text = findTotal(7, 1)
-                            If ComboBox182.SelectedIndex > -1 Then
-                                TextBox18.Text = findTotal(8, 1)
-                                If ComboBox192.SelectedIndex > -1 Then
-                                    TextBox19.Text = findTotal(9, 1)
-                                    If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox151.SelectedIndex > -1 AndAlso ComboBox151.SelectedItem.Equals("X") Or ComboBox152.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox151.SelectedItem
+                        value2 = ComboBox152.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox15, TextBox14, TextBox13, 5, v1, v2, 0, 1)
+                    End If
+                    If Not ((strikes1.Contains(5) Or spares1.Contains(5)) And framevalues1(4) = 0) Then
+                        TextBox15.Text = findTotal(5, 1)
+                    End If
+                    If ComboBox161.SelectedIndex > -1 AndAlso ComboBox161.SelectedItem.Equals("X") Or ComboBox162.SelectedIndex > -1 Then
+                        If strikes1.Contains(frame) And strikes1.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox161.SelectedItem
+                            value2 = ComboBox162.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox16, TextBox15, TextBox14, 6, v1, v2, 0, 1)
+                            If framevalues1(4) > 0 Then
+                                TextBox15.Text = findTotal(5, 1)
+                            End If
+                        End If
+                        If Not ((strikes1.Contains(6) Or spares1.Contains(6)) And framevalues1(5) = 0) Then
+                            TextBox16.Text = findTotal(6, 1)
+                        End If
+                        If ComboBox171.SelectedIndex > -1 AndAlso ComboBox171.SelectedItem.Equals("X") Or ComboBox172.SelectedIndex > -1 Then
+                            If Not ((strikes1.Contains(7) Or spares1.Contains(7)) And framevalues1(6) = 0) Then
+                                TextBox17.Text = findTotal(7, 1)
+                            End If
+                            If ComboBox181.SelectedIndex > -1 AndAlso ComboBox181.SelectedItem.Equals("X") Or ComboBox182.SelectedIndex > -1 Then
+                                If Not ((strikes1.Contains(8) Or spares1.Contains(8)) And framevalues1(7) = 0) Then
+                                    TextBox18.Text = findTotal(8, 1)
+                                End If
+                                If ComboBox191.SelectedIndex > -1 AndAlso ComboBox191.SelectedItem.Equals("X") Or ComboBox192.SelectedIndex > -1 Then
+                                    If Not ((strikes1.Contains(9) Or spares1.Contains(9)) And framevalues1(8) = 0) Then
+                                        TextBox19.Text = findTotal(9, 1)
+                                    End If
+                                    If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                                      (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
                                         TextBox110.Text = findTotal(10, 1)
                                     End If
                                 End If
@@ -495,15 +729,65 @@
                     End If
                 End If
             ElseIf frame = 5 Then
-                If ComboBox162.SelectedIndex > -1 Then
-                    TextBox16.Text = findTotal(6, 1)
-                    If ComboBox172.SelectedIndex > -1 Then
-                        TextBox17.Text = findTotal(7, 1)
-                        If ComboBox182.SelectedIndex > -1 Then
-                            TextBox18.Text = findTotal(8, 1)
-                            If ComboBox192.SelectedIndex > -1 Then
-                                TextBox19.Text = findTotal(9, 1)
-                                If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox161.SelectedIndex > -1 AndAlso ComboBox161.SelectedItem.Equals("X") Or ComboBox162.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox161.SelectedItem
+                        value2 = ComboBox162.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox16, TextBox15, TextBox14, 6, v1, v2, 0, 1)
+                    End If
+                    If Not ((strikes1.Contains(6) Or spares1.Contains(6)) And framevalues1(5) = 0) Then
+                        TextBox16.Text = findTotal(6, 1)
+                    End If
+                    If ComboBox171.SelectedIndex > -1 AndAlso ComboBox171.SelectedItem.Equals("X") Or ComboBox172.SelectedIndex > -1 Then
+                        If strikes1.Contains(frame) And strikes1.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox171.SelectedItem
+                            value2 = ComboBox172.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox17, TextBox16, TextBox15, 7, v1, v2, 0, 1)
+                            If framevalues1(5) > 0 Then
+                                TextBox16.Text = findTotal(6, 1)
+                            End If
+                        End If
+                        If Not ((strikes1.Contains(7) Or spares1.Contains(7)) And framevalues1(6) = 0) Then
+                            TextBox17.Text = findTotal(7, 1)
+                        End If
+                        If ComboBox181.SelectedIndex > -1 AndAlso ComboBox181.SelectedItem.Equals("X") Or ComboBox182.SelectedIndex > -1 Then
+                            If Not ((strikes1.Contains(8) Or spares1.Contains(8)) And framevalues1(7) = 0) Then
+                                TextBox18.Text = findTotal(8, 1)
+                            End If
+                            If ComboBox191.SelectedIndex > -1 AndAlso ComboBox191.SelectedItem.Equals("X") Or ComboBox192.SelectedIndex > -1 Then
+                                If Not ((strikes1.Contains(9) Or spares1.Contains(9)) And framevalues1(8) = 0) Then
+                                    TextBox19.Text = findTotal(9, 1)
+                                End If
+                                If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                                    (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
                                     TextBox110.Text = findTotal(10, 1)
                                 End If
                             End If
@@ -511,37 +795,223 @@
                     End If
                 End If
             ElseIf frame = 6 Then
-                If ComboBox172.SelectedIndex > -1 Then
-                    TextBox17.Text = findTotal(7, 1)
-                    If ComboBox182.SelectedIndex > -1 Then
-                        TextBox18.Text = findTotal(8, 1)
-                        If ComboBox192.SelectedIndex > -1 Then
-                            TextBox19.Text = findTotal(9, 1)
-                            If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox171.SelectedIndex > -1 AndAlso ComboBox171.SelectedItem.Equals("X") Or ComboBox172.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox171.SelectedItem
+                        value2 = ComboBox172.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox17, TextBox16, TextBox15, 7, v1, v2, 0, 1)
+                    End If
+                    If Not ((strikes1.Contains(7) Or spares1.Contains(7)) And framevalues1(6) = 0) Then
+                        TextBox17.Text = findTotal(7, 1)
+                    End If
+                    If ComboBox181.SelectedIndex > -1 AndAlso ComboBox181.SelectedItem.Equals("X") Or ComboBox182.SelectedIndex > -1 Then
+                        If strikes1.Contains(frame) And strikes1.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox181.SelectedItem
+                            value2 = ComboBox182.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox18, TextBox17, TextBox16, 8, v1, v2, 0, 1)
+                            If framevalues1(6) > 0 Then
+                                TextBox17.Text = findTotal(7, 1)
+                            End If
+                        End If
+                        If Not ((strikes1.Contains(8) Or spares1.Contains(8)) And framevalues1(7) = 0) Then
+                            TextBox18.Text = findTotal(8, 1)
+                        End If
+                        If ComboBox191.SelectedIndex > -1 AndAlso ComboBox191.SelectedItem.Equals("X") Or ComboBox192.SelectedIndex > -1 Then
+                            If Not ((strikes1.Contains(9) Or spares1.Contains(9)) And framevalues1(8) = 0) Then
+                                TextBox19.Text = findTotal(9, 1)
+                            End If
+                            If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                              (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
                                 TextBox110.Text = findTotal(10, 1)
                             End If
                         End If
                     End If
                 End If
             ElseIf frame = 7 Then
-                If ComboBox182.SelectedIndex > -1 Then
-                    TextBox18.Text = findTotal(8, 1)
-                    If ComboBox192.SelectedIndex > -1 Then
-                        TextBox19.Text = findTotal(9, 1)
-                        If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox181.SelectedIndex > -1 AndAlso ComboBox181.SelectedItem.Equals("X") Or ComboBox182.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox181.SelectedItem
+                        value2 = ComboBox182.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox18, TextBox17, TextBox16, 8, v1, v2, 0, 1)
+                    End If
+                    If Not ((strikes1.Contains(8) Or spares1.Contains(8)) And framevalues1(7) = 0) Then
+                        TextBox18.Text = findTotal(8, 1)
+                    End If
+                    If ComboBox191.SelectedIndex > -1 AndAlso ComboBox191.SelectedItem.Equals("X") Or ComboBox192.SelectedIndex > -1 Then
+                        If strikes1.Contains(frame) And strikes1.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox191.SelectedItem
+                            value2 = ComboBox192.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox19, TextBox18, TextBox17, 9, v1, v2, 0, 1)
+                            If framevalues1(7) > 0 Then
+                                TextBox18.Text = findTotal(8, 1)
+                            End If
+                        End If
+                        If Not ((strikes1.Contains(9) Or spares1.Contains(9)) And framevalues1(8) = 0) Then
+                            TextBox19.Text = findTotal(9, 1)
+                        End If
+                        If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                          (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
                             TextBox110.Text = findTotal(10, 1)
                         End If
                     End If
                 End If
             ElseIf frame = 8 Then
-                If ComboBox192.SelectedIndex > -1 Then
-                    TextBox19.Text = findTotal(9, 1)
-                    If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox191.SelectedIndex > -1 AndAlso ComboBox191.SelectedItem.Equals("X") Or ComboBox192.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox191.SelectedItem
+                        value2 = ComboBox192.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox19, TextBox18, TextBox17, 9, v1, v2, 0, 1)
+                    End If
+                    If Not ((strikes1.Contains(9) Or spares1.Contains(9)) And framevalues1(8) = 0) Then
+                        TextBox19.Text = findTotal(9, 1)
+                    End If
+                    If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                     (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
+                        If strikes1.Contains(frame) And strikes1.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim value3 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            Dim v3 As Integer
+                            value1 = ComboBox1101.SelectedItem
+                            value2 = ComboBox1102.SelectedItem
+                            value3 = ComboBox1103.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                            Else
+                                v1 = CInt(value1)
+                            End If
+
+                            If value2.Equals("X") Then
+                                v2 = 10
+                            ElseIf value2.Equals("/") Then
+                                v2 = 10 - v1
+                            Else
+                                v2 = CInt(value2)
+                            End If
+
+                            If value3.Equals("X") Then
+                                v3 = 10
+                            ElseIf value3.Equals("/") Then
+                                v3 = 10 - v2
+                            Else
+                                v3 = CInt(value3)
+                            End If
+                            Calculate(TextBox110, TextBox19, TextBox18, 10, v1, v2, v3, 1)
+                            If framevalues1(8) > 0 Then
+                                TextBox19.Text = findTotal(9, 1)
+                            End If
+                        End If
                         TextBox110.Text = findTotal(10, 1)
                     End If
                 End If
             ElseIf frame = 9 Then
-                If ComboBox1103.SelectedIndex > -1 Then
+                If ComboBox1103.SelectedIndex > -1 Or ComboBox1102.SelectedIndex > -1 AndAlso
+                    (Not ComboBox1101.SelectedItem.Equals("X") And Not ComboBox1102.SelectedItem.Equals("/")) Then
+                    If strikes1.Contains(frame) Or spares1.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim value3 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        Dim v3 As Integer
+                        value1 = ComboBox1101.SelectedItem
+                        value2 = ComboBox1102.SelectedItem
+                        value3 = ComboBox1103.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                        Else
+                            v1 = CInt(value1)
+                        End If
+
+                        If value2.Equals("X") Then
+                            v2 = 10
+                        ElseIf value2.Equals("/") Then
+                            v2 = 10 - v1
+                        Else
+                            v2 = CInt(value2)
+                        End If
+
+                        If value3.Equals("X") Then
+                            v3 = 10
+                        ElseIf value3.Equals("/") Then
+                            v3 = 10 - v2
+                        Else
+                            v3 = CInt(value3)
+                        End If
+                        Calculate(TextBox110, TextBox19, TextBox18, 10, v1, v2, v3, 1)
+                    End If
                     TextBox110.Text = findTotal(10, 1)
                 End If
             Else
@@ -549,24 +1019,82 @@
             End If
         ElseIf n = 2 Then
             If frame = 1 Then
-                If ComboBox222.SelectedIndex > -1 Then
-                    TextBox22.Text = findTotal(2, 1)
-                    If ComboBox232.SelectedIndex > -1 Then
-                        TextBox23.Text = findTotal(3, 1)
-                        If ComboBox242.SelectedIndex > -1 Then
-                            TextBox24.Text = findTotal(4, 1)
-                            If ComboBox252.SelectedIndex > -1 Then
-                                TextBox25.Text = findTotal(5, 1)
-                                If ComboBox262.SelectedIndex > -1 Then
-                                    TextBox26.Text = findTotal(6, 1)
-                                    If ComboBox272.SelectedIndex > -1 Then
-                                        TextBox27.Text = findTotal(7, 1)
-                                        If ComboBox282.SelectedIndex > -1 Then
-                                            TextBox28.Text = findTotal(8, 1)
-                                            If ComboBox292.SelectedIndex > -1 Then
-                                                TextBox29.Text = findTotal(9, 1)
-                                                If ComboBox2103.SelectedIndex > -1 Then
-                                                    TextBox210.Text = findTotal(10, 1)
+                If ComboBox221.SelectedIndex > -1 AndAlso ComboBox221.SelectedItem.Equals("X") Or ComboBox222.SelectedIndex > -1 Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox221.SelectedItem
+                        value2 = ComboBox222.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox22, TextBox21, TextBox21, 2, v1, v2, 0, 2)
+                    End If
+                    If Not ((strikes2.Contains(2) Or spares2.Contains(2)) And framevalues2(1) = 0) Then
+                        TextBox22.Text = findTotal(2, 2)
+                    End If
+                    If ComboBox231.SelectedIndex > -1 AndAlso ComboBox231.SelectedItem.Equals("X") Or ComboBox232.SelectedIndex > -1 Then
+                        If strikes2.Contains(frame) And strikes2.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox231.SelectedItem
+                            value2 = ComboBox232.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox23, TextBox22, TextBox21, 3, v1, v2, 0, 2)
+                            If framevalues2(1) > 0 Then
+                                TextBox22.Text = findTotal(2, 2)
+                            End If
+                        End If
+                        If Not ((strikes2.Contains(3) Or spares2.Contains(3)) And framevalues2(2) = 0) Then
+                            TextBox23.Text = findTotal(3, 2)
+                        End If
+                        If ComboBox241.SelectedIndex > -1 AndAlso ComboBox241.SelectedItem.Equals("X") Or ComboBox242.SelectedIndex > -1 Then
+                            If Not ((strikes2.Contains(4) Or spares2.Contains(4)) And framevalues2(3) = 0) Then
+                                TextBox24.Text = findTotal(4, 2)
+                            End If
+                            If ComboBox251.SelectedIndex > -1 AndAlso ComboBox251.SelectedItem.Equals("X") Or ComboBox252.SelectedIndex > -1 Then
+                                If Not ((strikes2.Contains(5) Or spares2.Contains(5)) And framevalues2(4) = 0) Then
+                                    TextBox25.Text = findTotal(5, 2)
+                                End If
+                                If ComboBox261.SelectedIndex > -1 AndAlso ComboBox261.SelectedItem.Equals("X") Or ComboBox262.SelectedIndex > -1 Then
+                                    If Not ((strikes2.Contains(6) Or spares2.Contains(6)) And framevalues2(5) = 0) Then
+                                        TextBox26.Text = findTotal(6, 2)
+                                    End If
+                                    If ComboBox271.SelectedIndex > -1 AndAlso ComboBox271.SelectedItem.Equals("X") Or ComboBox272.SelectedIndex > -1 Then
+                                        If Not ((strikes2.Contains(7) Or spares2.Contains(7)) And framevalues2(6) = 0) Then
+                                            TextBox27.Text = findTotal(7, 2)
+                                        End If
+                                        If ComboBox281.SelectedIndex > -1 AndAlso ComboBox281.SelectedItem.Equals("X") Or ComboBox282.SelectedIndex > -1 Then
+                                            If Not ((strikes2.Contains(8) Or spares2.Contains(8)) And framevalues2(7) = 0) Then
+                                                TextBox28.Text = findTotal(8, 2)
+                                            End If
+                                            If ComboBox291.SelectedIndex > -1 AndAlso ComboBox291.SelectedItem.Equals("X") Or ComboBox292.SelectedIndex > -1 Then
+                                                If Not ((strikes2.Contains(9) Or spares2.Contains(9)) And framevalues2(8) = 0) Then
+                                                    TextBox29.Text = findTotal(9, 2)
+                                                End If
+                                                If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                                                   (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                                                    TextBox210.Text = findTotal(10, 2)
                                                 End If
                                             End If
                                         End If
@@ -577,22 +1105,78 @@
                     End If
                 End If
             ElseIf frame = 2 Then
-                If ComboBox232.SelectedIndex > -1 Then
-                    TextBox23.Text = findTotal(3, 1)
-                    If ComboBox242.SelectedIndex > -1 Then
-                        TextBox24.Text = findTotal(4, 1)
-                        If ComboBox252.SelectedIndex > -1 Then
-                            TextBox25.Text = findTotal(5, 1)
-                            If ComboBox262.SelectedIndex > -1 Then
-                                TextBox26.Text = findTotal(6, 1)
-                                If ComboBox272.SelectedIndex > -1 Then
-                                    TextBox27.Text = findTotal(7, 1)
-                                    If ComboBox282.SelectedIndex > -1 Then
-                                        TextBox28.Text = findTotal(8, 1)
-                                        If ComboBox292.SelectedIndex > -1 Then
-                                            TextBox29.Text = findTotal(9, 1)
-                                            If ComboBox2103.SelectedIndex > -1 Then
-                                                TextBox210.Text = findTotal(10, 1)
+                If ComboBox231.SelectedIndex > -1 AndAlso ComboBox231.SelectedItem.Equals("X") Or ComboBox232.SelectedIndex > -1 Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox231.SelectedItem
+                        value2 = ComboBox232.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox23, TextBox22, TextBox21, 3, v1, v2, 0, 2)
+                    End If
+                    If Not ((strikes2.Contains(3) Or spares2.Contains(3)) And framevalues2(2) = 0) Then
+                        TextBox23.Text = findTotal(3, 2)
+                    End If
+                    If ComboBox241.SelectedIndex > -1 AndAlso ComboBox241.SelectedItem.Equals("X") Or ComboBox242.SelectedIndex > -1 Then
+                        If strikes2.Contains(frame) And strikes2.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox241.SelectedItem
+                            value2 = ComboBox242.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox24, TextBox23, TextBox22, 4, v1, v2, 0, 2)
+                            If framevalues2(2) > 0 Then
+                                TextBox23.Text = findTotal(3, 2)
+                            End If
+                        End If
+                        If Not ((strikes2.Contains(4) Or spares2.Contains(4)) And framevalues2(3) = 0) Then
+                            TextBox24.Text = findTotal(4, 2)
+                        End If
+                        If ComboBox251.SelectedIndex > -1 AndAlso ComboBox251.SelectedItem.Equals("X") Or ComboBox252.SelectedIndex > -1 Then
+                            If Not ((strikes2.Contains(5) Or spares2.Contains(5)) And framevalues2(4) = 0) Then
+                                TextBox25.Text = findTotal(5, 2)
+                            End If
+                            If ComboBox261.SelectedIndex > -1 AndAlso ComboBox261.SelectedItem.Equals("X") Or ComboBox262.SelectedIndex > -1 Then
+                                If Not ((strikes2.Contains(6) Or spares2.Contains(6)) And framevalues2(5) = 0) Then
+                                    TextBox26.Text = findTotal(6, 2)
+                                End If
+                                If ComboBox271.SelectedIndex > -1 AndAlso ComboBox271.SelectedItem.Equals("X") Or ComboBox272.SelectedIndex > -1 Then
+                                    If Not ((strikes2.Contains(7) Or spares2.Contains(7)) And framevalues2(6) = 0) Then
+                                        TextBox27.Text = findTotal(7, 2)
+                                    End If
+                                    If ComboBox281.SelectedIndex > -1 AndAlso ComboBox281.SelectedItem.Equals("X") Or ComboBox282.SelectedIndex > -1 Then
+                                        If Not ((strikes2.Contains(8) Or spares2.Contains(8)) And framevalues2(7) = 0) Then
+                                            TextBox28.Text = findTotal(8, 2)
+                                        End If
+                                        If ComboBox291.SelectedIndex > -1 AndAlso ComboBox291.SelectedItem.Equals("X") Or ComboBox292.SelectedIndex > -1 Then
+                                            If Not ((strikes2.Contains(9) Or spares2.Contains(9)) And framevalues2(8) = 0) Then
+                                                TextBox29.Text = findTotal(9, 2)
+                                            End If
+                                            If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                                               (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                                                TextBox210.Text = findTotal(10, 2)
                                             End If
                                         End If
                                     End If
@@ -602,20 +1186,74 @@
                     End If
                 End If
             ElseIf frame = 3 Then
-                If ComboBox242.SelectedIndex > -1 Then
-                    TextBox24.Text = findTotal(4, 1)
-                    If ComboBox252.SelectedIndex > -1 Then
-                        TextBox25.Text = findTotal(5, 1)
-                        If ComboBox262.SelectedIndex > -1 Then
-                            TextBox26.Text = findTotal(6, 1)
-                            If ComboBox272.SelectedIndex > -1 Then
-                                TextBox27.Text = findTotal(7, 1)
-                                If ComboBox282.SelectedIndex > -1 Then
-                                    TextBox28.Text = findTotal(8, 1)
-                                    If ComboBox292.SelectedIndex > -1 Then
-                                        TextBox29.Text = findTotal(9, 1)
-                                        If ComboBox2103.SelectedIndex > -1 Then
-                                            TextBox210.Text = findTotal(10, 1)
+                If ComboBox241.SelectedIndex > -1 AndAlso ComboBox241.SelectedItem.Equals("X") Or ComboBox242.SelectedIndex > -1 Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox241.SelectedItem
+                        value2 = ComboBox242.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox24, TextBox23, TextBox22, 4, v1, v2, 0, 2)
+                    End If
+                    If Not ((strikes2.Contains(4) Or spares2.Contains(4)) And framevalues2(3) = 0) Then
+                        TextBox24.Text = findTotal(4, 2)
+                    End If
+                    If ComboBox251.SelectedIndex > -1 AndAlso ComboBox251.SelectedItem.Equals("X") Or ComboBox252.SelectedIndex > -1 Then
+                        If strikes2.Contains(frame) And strikes2.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox251.SelectedItem
+                            value2 = ComboBox252.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox25, TextBox24, TextBox23, 5, v1, v2, 0, 2)
+                            If framevalues2(3) > 0 Then
+                                TextBox24.Text = findTotal(4, 2)
+                            End If
+                        End If
+                        If Not ((strikes2.Contains(5) Or spares2.Contains(5)) And framevalues2(4) = 0) Then
+                            TextBox25.Text = findTotal(5, 2)
+                        End If
+                        If ComboBox261.SelectedIndex > -1 AndAlso ComboBox261.SelectedItem.Equals("X") Or ComboBox262.SelectedIndex > -1 Then
+                            If Not ((strikes2.Contains(6) Or spares2.Contains(6)) And framevalues2(5) = 0) Then
+                                TextBox26.Text = findTotal(6, 2)
+                            End If
+                            If ComboBox271.SelectedIndex > -1 AndAlso ComboBox271.SelectedItem.Equals("X") Or ComboBox272.SelectedIndex > -1 Then
+                                If Not ((strikes2.Contains(7) Or spares2.Contains(7)) And framevalues2(6) = 0) Then
+                                    TextBox27.Text = findTotal(7, 2)
+                                End If
+                                If ComboBox281.SelectedIndex > -1 AndAlso ComboBox281.SelectedItem.Equals("X") Or ComboBox282.SelectedIndex > -1 Then
+                                    If Not ((strikes2.Contains(8) Or spares2.Contains(8)) And framevalues2(7) = 0) Then
+                                        TextBox28.Text = findTotal(8, 2)
+                                    End If
+                                    If ComboBox291.SelectedIndex > -1 AndAlso ComboBox291.SelectedItem.Equals("X") Or ComboBox292.SelectedIndex > -1 Then
+                                        If Not ((strikes2.Contains(9) Or spares2.Contains(9)) And framevalues2(8) = 0) Then
+                                            TextBox29.Text = findTotal(9, 2)
+                                        End If
+                                        If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                                           (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                                            TextBox210.Text = findTotal(10, 2)
                                         End If
                                     End If
                                 End If
@@ -624,18 +1262,70 @@
                     End If
                 End If
             ElseIf frame = 4 Then
-                If ComboBox252.SelectedIndex > -1 Then
-                    TextBox25.Text = findTotal(5, 1)
-                    If ComboBox262.SelectedIndex > -1 Then
-                        TextBox26.Text = findTotal(6, 1)
-                        If ComboBox272.SelectedIndex > -1 Then
-                            TextBox27.Text = findTotal(7, 1)
-                            If ComboBox282.SelectedIndex > -1 Then
-                                TextBox28.Text = findTotal(8, 1)
-                                If ComboBox292.SelectedIndex > -1 Then
-                                    TextBox29.Text = findTotal(9, 1)
-                                    If ComboBox2103.SelectedIndex > -1 Then
-                                        TextBox210.Text = findTotal(10, 1)
+                If ComboBox251.SelectedIndex > -1 AndAlso ComboBox251.SelectedItem.Equals("X") Or ComboBox252.SelectedIndex > -1 Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox251.SelectedItem
+                        value2 = ComboBox252.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox25, TextBox24, TextBox23, 5, v1, v2, 0, 2)
+                    End If
+                    If Not ((strikes2.Contains(5) Or spares2.Contains(5)) And framevalues2(4) = 0) Then
+                        TextBox25.Text = findTotal(5, 2)
+                    End If
+                    If ComboBox261.SelectedIndex > -1 AndAlso ComboBox261.SelectedItem.Equals("X") Or ComboBox262.SelectedIndex > -1 Then
+                        If strikes2.Contains(frame) And strikes2.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox261.SelectedItem
+                            value2 = ComboBox262.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox26, TextBox25, TextBox24, 6, v1, v2, 0, 2)
+                            If framevalues2(4) > 0 Then
+                                TextBox25.Text = findTotal(5, 2)
+                            End If
+                        End If
+                        If Not ((strikes2.Contains(6) Or spares2.Contains(6)) And framevalues2(5) = 0) Then
+                            TextBox26.Text = findTotal(6, 2)
+                        End If
+                        If ComboBox271.SelectedIndex > -1 AndAlso ComboBox271.SelectedItem.Equals("X") Or ComboBox272.SelectedIndex > -1 Then
+                            If Not ((strikes2.Contains(7) Or spares2.Contains(7)) And framevalues2(6) = 0) Then
+                                TextBox27.Text = findTotal(7, 2)
+                            End If
+                            If ComboBox281.SelectedIndex > -1 AndAlso ComboBox281.SelectedItem.Equals("X") Or ComboBox282.SelectedIndex > -1 Then
+                                If Not ((strikes2.Contains(8) Or spares2.Contains(8)) And framevalues2(7) = 0) Then
+                                    TextBox28.Text = findTotal(8, 2)
+                                End If
+                                If ComboBox291.SelectedIndex > -1 AndAlso ComboBox291.SelectedItem.Equals("X") Or ComboBox292.SelectedIndex > -1 Then
+                                    If Not ((strikes2.Contains(9) Or spares2.Contains(9)) And framevalues2(8) = 0) Then
+                                        TextBox29.Text = findTotal(9, 2)
+                                    End If
+                                    If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                                       (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                                        TextBox210.Text = findTotal(10, 2)
                                     End If
                                 End If
                             End If
@@ -643,78 +1333,372 @@
                     End If
                 End If
             ElseIf frame = 5 Then
-                If ComboBox262.SelectedIndex > -1 Then
-                    TextBox26.Text = findTotal(6, 1)
-                    If ComboBox272.SelectedIndex > -1 Then
-                        TextBox27.Text = findTotal(7, 1)
-                        If ComboBox282.SelectedIndex > -1 Then
-                            TextBox28.Text = findTotal(8, 1)
-                            If ComboBox292.SelectedIndex > -1 Then
-                                TextBox29.Text = findTotal(9, 1)
-                                If ComboBox2103.SelectedIndex > -1 Then
-                                    TextBox210.Text = findTotal(10, 1)
+                If ComboBox261.SelectedIndex > -1 AndAlso ComboBox261.SelectedItem.Equals("X") Or ComboBox262.SelectedIndex > -1 Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox261.SelectedItem
+                        value2 = ComboBox262.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox26, TextBox25, TextBox24, 6, v1, v2, 0, 2)
+                    End If
+                    If Not ((strikes2.Contains(6) Or spares2.Contains(6)) And framevalues2(5) = 0) Then
+                        TextBox26.Text = findTotal(6, 2)
+                    End If
+                    If ComboBox271.SelectedIndex > -1 AndAlso ComboBox271.SelectedItem.Equals("X") Or ComboBox272.SelectedIndex > -1 Then
+                        If strikes2.Contains(frame) And strikes2.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox271.SelectedItem
+                            value2 = ComboBox272.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox27, TextBox26, TextBox25, 7, v1, v2, 0, 2)
+                            If framevalues2(5) > 0 Then
+                                TextBox26.Text = findTotal(6, 2)
+                            End If
+                        End If
+                        If Not ((strikes2.Contains(7) Or spares2.Contains(7)) And framevalues2(6) = 0) Then
+                            TextBox27.Text = findTotal(7, 2)
+                        End If
+                        If ComboBox281.SelectedIndex > -1 AndAlso ComboBox281.SelectedItem.Equals("X") Or ComboBox282.SelectedIndex > -1 Then
+                            If Not ((strikes2.Contains(8) Or spares2.Contains(8)) And framevalues2(7) = 0) Then
+                                TextBox28.Text = findTotal(8, 2)
+                            End If
+                            If ComboBox291.SelectedIndex > -1 AndAlso ComboBox291.SelectedItem.Equals("X") Or ComboBox292.SelectedIndex > -1 Then
+                                If Not ((strikes2.Contains(9) Or spares2.Contains(9)) And framevalues2(8) = 0) Then
+                                    TextBox29.Text = findTotal(9, 2)
+                                End If
+                                If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                                   (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                                    TextBox210.Text = findTotal(10, 2)
                                 End If
                             End If
                         End If
                     End If
                 End If
             ElseIf frame = 6 Then
-                If ComboBox272.SelectedIndex > -1 Then
-                    TextBox27.Text = findTotal(7, 1)
-                    If ComboBox282.SelectedIndex > -1 Then
-                        TextBox28.Text = findTotal(8, 1)
-                        If ComboBox292.SelectedIndex > -1 Then
-                            TextBox29.Text = findTotal(9, 1)
-                            If ComboBox2103.SelectedIndex > -1 Then
-                                TextBox210.Text = findTotal(10, 1)
+                If ComboBox271.SelectedIndex > -1 AndAlso ComboBox271.SelectedItem.Equals("X") Or ComboBox272.SelectedIndex > -1 Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox271.SelectedItem
+                        value2 = ComboBox272.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox27, TextBox26, TextBox25, 7, v1, v2, 0, 2)
+                    End If
+                    If Not ((strikes2.Contains(7) Or spares2.Contains(7)) And framevalues2(6) = 0) Then
+                        TextBox27.Text = findTotal(7, 2)
+                    End If
+                    If ComboBox281.SelectedIndex > -1 AndAlso ComboBox281.SelectedItem.Equals("X") Or ComboBox282.SelectedIndex > -1 Then
+                        If strikes2.Contains(frame) And strikes2.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox281.SelectedItem
+                            value2 = ComboBox282.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox28, TextBox27, TextBox26, 8, v1, v2, 0, 2)
+                            If framevalues2(6) > 0 Then
+                                TextBox27.Text = findTotal(7, 2)
+                            End If
+                        End If
+                        If Not ((strikes2.Contains(8) Or spares2.Contains(8)) And framevalues2(7) = 0) Then
+                            TextBox28.Text = findTotal(8, 2)
+                        End If
+                        If ComboBox291.SelectedIndex > -1 AndAlso ComboBox291.SelectedItem.Equals("X") Or ComboBox292.SelectedIndex > -1 Then
+                            If Not ((strikes2.Contains(9) Or spares2.Contains(9)) And framevalues2(8) = 0) Then
+                                TextBox29.Text = findTotal(9, 2)
+                            End If
+                            If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                               (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                                TextBox210.Text = findTotal(10, 2)
                             End If
                         End If
                     End If
                 End If
             ElseIf frame = 7 Then
-                If ComboBox282.SelectedIndex > -1 Then
-                    TextBox28.Text = findTotal(8, 1)
-                    If ComboBox292.SelectedIndex > -1 Then
-                        TextBox29.Text = findTotal(9, 1)
-                        If ComboBox2103.SelectedIndex > -1 Then
-                            TextBox210.Text = findTotal(10, 1)
+                If ComboBox281.SelectedIndex > -1 AndAlso ComboBox281.SelectedItem.Equals("X") Or ComboBox282.SelectedIndex > -1 Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox281.SelectedItem
+                        value2 = ComboBox282.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox28, TextBox27, TextBox26, 8, v1, v2, 0, 2)
+                    End If
+                    If Not ((strikes2.Contains(8) Or spares2.Contains(8)) And framevalues2(7) = 0) Then
+                        TextBox28.Text = findTotal(8, 2)
+                    End If
+                    If ComboBox291.SelectedIndex > -1 AndAlso ComboBox291.SelectedItem.Equals("X") Or ComboBox292.SelectedIndex > -1 Then
+                        If strikes2.Contains(frame) And strikes2.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox291.SelectedItem
+                            value2 = ComboBox292.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox29, TextBox28, TextBox27, 9, v1, v2, 0, 2)
+                            If framevalues2(7) > 0 Then
+                                TextBox28.Text = findTotal(8, 2)
+                            End If
+                        End If
+                        If Not ((strikes2.Contains(9) Or spares2.Contains(9)) And framevalues2(8) = 0) Then
+                            TextBox29.Text = findTotal(9, 2)
+                        End If
+                        If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                           (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                            TextBox210.Text = findTotal(10, 2)
                         End If
                     End If
                 End If
             ElseIf frame = 8 Then
-                If ComboBox292.SelectedIndex > -1 Then
-                    TextBox29.Text = findTotal(9, 1)
-                    If ComboBox2103.SelectedIndex > -1 Then
-                        TextBox210.Text = findTotal(10, 1)
+                If ComboBox291.SelectedIndex > -1 AndAlso ComboBox291.SelectedItem.Equals("X") Or ComboBox292.SelectedIndex > -1 Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox291.SelectedItem
+                        value2 = ComboBox292.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox29, TextBox28, TextBox27, 9, v1, v2, 0, 2)
+                    End If
+                    If Not ((strikes2.Contains(9) Or spares2.Contains(9)) And framevalues2(8) = 0) Then
+                        TextBox29.Text = findTotal(9, 2)
+                    End If
+                    If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                     (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                        If strikes2.Contains(frame) And strikes2.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim value3 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            Dim v3 As Integer
+                            value1 = ComboBox2101.SelectedItem
+                            value2 = ComboBox2102.SelectedItem
+                            value3 = ComboBox2103.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                            Else
+                                v1 = CInt(value1)
+                            End If
+
+                            If value2.Equals("X") Then
+                                v2 = 10
+                            ElseIf value2.Equals("/") Then
+                                v2 = 10 - v1
+                            Else
+                                v2 = CInt(value2)
+                            End If
+
+                            If value3.Equals("X") Then
+                                v3 = 10
+                            ElseIf value3.Equals("/") Then
+                                v3 = 10 - v2
+                            Else
+                                v3 = CInt(value3)
+                            End If
+                            Calculate(TextBox210, TextBox29, TextBox28, 10, v1, v2, v3, 2)
+                            If framevalues2(8) > 0 Then
+                                TextBox29.Text = findTotal(9, 2)
+                            End If
+                        End If
+                        TextBox210.Text = findTotal(10, 2)
                     End If
                 End If
             ElseIf frame = 9 Then
-                If ComboBox2103.SelectedIndex > -1 Then
-                    TextBox210.Text = findTotal(10, 1)
+                If ComboBox2103.SelectedIndex > -1 Or ComboBox2102.SelectedIndex > -1 AndAlso
+                    (Not ComboBox2101.SelectedItem.Equals("X") And Not ComboBox2102.SelectedItem.Equals("/")) Then
+                    If strikes2.Contains(frame) Or spares2.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim value3 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        Dim v3 As Integer
+                        value1 = ComboBox2101.SelectedItem
+                        value2 = ComboBox2102.SelectedItem
+                        value3 = ComboBox2103.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                        Else
+                            v1 = CInt(value1)
+                        End If
+
+                        If value2.Equals("X") Then
+                            v2 = 10
+                        ElseIf value2.Equals("/") Then
+                            v2 = 10 - v1
+                        Else
+                            v2 = CInt(value2)
+                        End If
+
+                        If value3.Equals("X") Then
+                            v3 = 10
+                        ElseIf value3.Equals("/") Then
+                            v3 = 10 - v2
+                        Else
+                            v3 = CInt(value3)
+                        End If
+                        Calculate(TextBox210, TextBox29, TextBox28, 10, v1, v2, v3, 2)
+                    End If
+                    TextBox210.Text = findTotal(10, 2)
                 End If
             Else
                 'this should never happen
             End If
         ElseIf n = 3 Then
             If frame = 1 Then
-                If ComboBox322.SelectedIndex > -1 Then
-                    TextBox32.Text = findTotal(2, 1)
-                    If ComboBox332.SelectedIndex > -1 Then
-                        TextBox33.Text = findTotal(3, 1)
-                        If ComboBox342.SelectedIndex > -1 Then
-                            TextBox34.Text = findTotal(4, 1)
-                            If ComboBox352.SelectedIndex > -1 Then
-                                TextBox35.Text = findTotal(5, 1)
-                                If ComboBox362.SelectedIndex > -1 Then
-                                    TextBox36.Text = findTotal(6, 1)
-                                    If ComboBox372.SelectedIndex > -1 Then
-                                        TextBox37.Text = findTotal(7, 1)
-                                        If ComboBox382.SelectedIndex > -1 Then
-                                            TextBox38.Text = findTotal(8, 1)
-                                            If ComboBox392.SelectedIndex > -1 Then
-                                                TextBox39.Text = findTotal(9, 1)
-                                                If ComboBox3103.SelectedIndex > -1 Then
-                                                    TextBox310.Text = findTotal(10, 1)
+                If ComboBox321.SelectedIndex > -1 AndAlso ComboBox321.SelectedItem.Equals("X") Or ComboBox322.SelectedIndex > -1 Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox321.SelectedItem
+                        value2 = ComboBox322.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox32, TextBox31, TextBox31, 2, v1, v2, 0, 3)
+                    End If
+                    If Not ((strikes3.Contains(2) Or spares3.Contains(2)) And framevalues3(1) = 0) Then
+                        TextBox32.Text = findTotal(2, 3)
+                    End If
+                    If ComboBox331.SelectedIndex > -1 AndAlso ComboBox331.SelectedItem.Equals("X") Or ComboBox332.SelectedIndex > -1 Then
+                        If strikes3.Contains(frame) And strikes3.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox331.SelectedItem
+                            value2 = ComboBox332.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox33, TextBox32, TextBox31, 3, v1, v2, 0, 3)
+                            If framevalues3(1) > 0 Then
+                                TextBox32.Text = findTotal(2, 3)
+                            End If
+                        End If
+                        If Not ((strikes3.Contains(3) Or spares3.Contains(3)) And framevalues3(2) = 0) Then
+                            TextBox33.Text = findTotal(3, 3)
+                        End If
+                        If ComboBox341.SelectedIndex > -1 AndAlso ComboBox341.SelectedItem.Equals("X") Or ComboBox342.SelectedIndex > -1 Then
+                            If Not ((strikes3.Contains(4) Or spares3.Contains(4)) And framevalues3(3) = 0) Then
+                                TextBox34.Text = findTotal(4, 3)
+                            End If
+                            If ComboBox351.SelectedIndex > -1 AndAlso ComboBox351.SelectedItem.Equals("X") Or ComboBox352.SelectedIndex > -1 Then
+                                If Not ((strikes3.Contains(5) Or spares3.Contains(5)) And framevalues3(4) = 0) Then
+                                    TextBox35.Text = findTotal(5, 3)
+                                End If
+                                If ComboBox361.SelectedIndex > -1 AndAlso ComboBox361.SelectedItem.Equals("X") Or ComboBox362.SelectedIndex > -1 Then
+                                    If Not ((strikes3.Contains(6) Or spares3.Contains(6)) And framevalues3(5) = 0) Then
+                                        TextBox36.Text = findTotal(6, 3)
+                                    End If
+                                    If ComboBox371.SelectedIndex > -1 AndAlso ComboBox371.SelectedItem.Equals("X") Or ComboBox372.SelectedIndex > -1 Then
+                                        If Not ((strikes3.Contains(7) Or spares3.Contains(7)) And framevalues3(6) = 0) Then
+                                            TextBox37.Text = findTotal(7, 3)
+                                        End If
+                                        If ComboBox381.SelectedIndex > -1 AndAlso ComboBox381.SelectedItem.Equals("X") Or ComboBox382.SelectedIndex > -1 Then
+                                            If Not ((strikes3.Contains(8) Or spares3.Contains(8)) And framevalues3(7) = 0) Then
+                                                TextBox38.Text = findTotal(8, 3)
+                                            End If
+                                            If ComboBox391.SelectedIndex > -1 AndAlso ComboBox391.SelectedItem.Equals("X") Or ComboBox392.SelectedIndex > -1 Then
+                                                If Not ((strikes3.Contains(9) Or spares3.Contains(9)) And framevalues3(8) = 0) Then
+                                                    TextBox39.Text = findTotal(9, 3)
+                                                End If
+                                                If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                                                   (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                                                    TextBox310.Text = findTotal(10, 3)
                                                 End If
                                             End If
                                         End If
@@ -725,22 +1709,78 @@
                     End If
                 End If
             ElseIf frame = 2 Then
-                If ComboBox332.SelectedIndex > -1 Then
-                    TextBox33.Text = findTotal(3, 1)
-                    If ComboBox342.SelectedIndex > -1 Then
-                        TextBox34.Text = findTotal(4, 1)
-                        If ComboBox352.SelectedIndex > -1 Then
-                            TextBox35.Text = findTotal(5, 1)
-                            If ComboBox362.SelectedIndex > -1 Then
-                                TextBox36.Text = findTotal(6, 1)
-                                If ComboBox372.SelectedIndex > -1 Then
-                                    TextBox37.Text = findTotal(7, 1)
-                                    If ComboBox382.SelectedIndex > -1 Then
-                                        TextBox38.Text = findTotal(8, 1)
-                                        If ComboBox392.SelectedIndex > -1 Then
-                                            TextBox39.Text = findTotal(9, 1)
-                                            If ComboBox3103.SelectedIndex > -1 Then
-                                                TextBox310.Text = findTotal(10, 1)
+                If ComboBox331.SelectedIndex > -1 AndAlso ComboBox331.SelectedItem.Equals("X") Or ComboBox332.SelectedIndex > -1 Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox331.SelectedItem
+                        value2 = ComboBox332.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox33, TextBox32, TextBox31, 3, v1, v2, 0, 3)
+                    End If
+                    If Not ((strikes3.Contains(3) Or spares3.Contains(3)) And framevalues3(2) = 0) Then
+                        TextBox33.Text = findTotal(3, 3)
+                    End If
+                    If ComboBox341.SelectedIndex > -1 AndAlso ComboBox341.SelectedItem.Equals("X") Or ComboBox342.SelectedIndex > -1 Then
+                        If strikes3.Contains(frame) And strikes3.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox341.SelectedItem
+                            value2 = ComboBox342.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox34, TextBox33, TextBox32, 4, v1, v2, 0, 3)
+                            If framevalues3(2) > 0 Then
+                                TextBox33.Text = findTotal(3, 3)
+                            End If
+                        End If
+                        If Not ((strikes3.Contains(4) Or spares3.Contains(4)) And framevalues3(3) = 0) Then
+                            TextBox34.Text = findTotal(4, 3)
+                        End If
+                        If ComboBox351.SelectedIndex > -1 AndAlso ComboBox351.SelectedItem.Equals("X") Or ComboBox352.SelectedIndex > -1 Then
+                            If Not ((strikes3.Contains(5) Or spares3.Contains(5)) And framevalues3(4) = 0) Then
+                                TextBox35.Text = findTotal(5, 3)
+                            End If
+                            If ComboBox361.SelectedIndex > -1 AndAlso ComboBox361.SelectedItem.Equals("X") Or ComboBox362.SelectedIndex > -1 Then
+                                If Not ((strikes3.Contains(6) Or spares3.Contains(6)) And framevalues3(5) = 0) Then
+                                    TextBox36.Text = findTotal(6, 3)
+                                End If
+                                If ComboBox371.SelectedIndex > -1 AndAlso ComboBox371.SelectedItem.Equals("X") Or ComboBox372.SelectedIndex > -1 Then
+                                    If Not ((strikes3.Contains(7) Or spares3.Contains(7)) And framevalues3(6) = 0) Then
+                                        TextBox37.Text = findTotal(7, 3)
+                                    End If
+                                    If ComboBox381.SelectedIndex > -1 AndAlso ComboBox381.SelectedItem.Equals("X") Or ComboBox382.SelectedIndex > -1 Then
+                                        If Not ((strikes3.Contains(8) Or spares3.Contains(8)) And framevalues3(7) = 0) Then
+                                            TextBox38.Text = findTotal(8, 3)
+                                        End If
+                                        If ComboBox391.SelectedIndex > -1 AndAlso ComboBox391.SelectedItem.Equals("X") Or ComboBox392.SelectedIndex > -1 Then
+                                            If Not ((strikes3.Contains(9) Or spares3.Contains(9)) And framevalues3(8) = 0) Then
+                                                TextBox39.Text = findTotal(9, 3)
+                                            End If
+                                            If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                                               (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                                                TextBox310.Text = findTotal(10, 3)
                                             End If
                                         End If
                                     End If
@@ -750,20 +1790,74 @@
                     End If
                 End If
             ElseIf frame = 3 Then
-                If ComboBox342.SelectedIndex > -1 Then
-                    TextBox34.Text = findTotal(4, 1)
-                    If ComboBox352.SelectedIndex > -1 Then
-                        TextBox35.Text = findTotal(5, 1)
-                        If ComboBox362.SelectedIndex > -1 Then
-                            TextBox36.Text = findTotal(6, 1)
-                            If ComboBox372.SelectedIndex > -1 Then
-                                TextBox37.Text = findTotal(7, 1)
-                                If ComboBox382.SelectedIndex > -1 Then
-                                    TextBox38.Text = findTotal(8, 1)
-                                    If ComboBox392.SelectedIndex > -1 Then
-                                        TextBox39.Text = findTotal(9, 1)
-                                        If ComboBox3103.SelectedIndex > -1 Then
-                                            TextBox310.Text = findTotal(10, 1)
+                If ComboBox341.SelectedIndex > -1 AndAlso ComboBox341.SelectedItem.Equals("X") Or ComboBox342.SelectedIndex > -1 Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox341.SelectedItem
+                        value2 = ComboBox342.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox34, TextBox33, TextBox32, 4, v1, v2, 0, 3)
+                    End If
+                    If Not ((strikes3.Contains(4) Or spares3.Contains(4)) And framevalues3(3) = 0) Then
+                        TextBox34.Text = findTotal(4, 3)
+                    End If
+                    If ComboBox351.SelectedIndex > -1 AndAlso ComboBox351.SelectedItem.Equals("X") Or ComboBox352.SelectedIndex > -1 Then
+                        If strikes3.Contains(frame) And strikes3.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox351.SelectedItem
+                            value2 = ComboBox352.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox35, TextBox34, TextBox33, 5, v1, v2, 0, 3)
+                            If framevalues3(3) > 0 Then
+                                TextBox34.Text = findTotal(4, 3)
+                            End If
+                        End If
+                        If Not ((strikes3.Contains(5) Or spares3.Contains(5)) And framevalues3(4) = 0) Then
+                            TextBox35.Text = findTotal(5, 3)
+                        End If
+                        If ComboBox361.SelectedIndex > -1 AndAlso ComboBox361.SelectedItem.Equals("X") Or ComboBox362.SelectedIndex > -1 Then
+                            If Not ((strikes3.Contains(6) Or spares3.Contains(6)) And framevalues3(5) = 0) Then
+                                TextBox36.Text = findTotal(6, 3)
+                            End If
+                            If ComboBox371.SelectedIndex > -1 AndAlso ComboBox371.SelectedItem.Equals("X") Or ComboBox372.SelectedIndex > -1 Then
+                                If Not ((strikes3.Contains(7) Or spares3.Contains(7)) And framevalues3(6) = 0) Then
+                                    TextBox37.Text = findTotal(7, 3)
+                                End If
+                                If ComboBox381.SelectedIndex > -1 AndAlso ComboBox381.SelectedItem.Equals("X") Or ComboBox382.SelectedIndex > -1 Then
+                                    If Not ((strikes3.Contains(8) Or spares3.Contains(8)) And framevalues3(7) = 0) Then
+                                        TextBox38.Text = findTotal(8, 3)
+                                    End If
+                                    If ComboBox391.SelectedIndex > -1 AndAlso ComboBox391.SelectedItem.Equals("X") Or ComboBox392.SelectedIndex > -1 Then
+                                        If Not ((strikes3.Contains(9) Or spares3.Contains(9)) And framevalues3(8) = 0) Then
+                                            TextBox39.Text = findTotal(9, 3)
+                                        End If
+                                        If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                                           (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                                            TextBox310.Text = findTotal(10, 3)
                                         End If
                                     End If
                                 End If
@@ -772,18 +1866,70 @@
                     End If
                 End If
             ElseIf frame = 4 Then
-                If ComboBox352.SelectedIndex > -1 Then
-                    TextBox35.Text = findTotal(5, 1)
-                    If ComboBox362.SelectedIndex > -1 Then
-                        TextBox36.Text = findTotal(6, 1)
-                        If ComboBox372.SelectedIndex > -1 Then
-                            TextBox37.Text = findTotal(7, 1)
-                            If ComboBox382.SelectedIndex > -1 Then
-                                TextBox38.Text = findTotal(8, 1)
-                                If ComboBox392.SelectedIndex > -1 Then
-                                    TextBox39.Text = findTotal(9, 1)
-                                    If ComboBox3103.SelectedIndex > -1 Then
-                                        TextBox310.Text = findTotal(10, 1)
+                If ComboBox351.SelectedIndex > -1 AndAlso ComboBox351.SelectedItem.Equals("X") Or ComboBox352.SelectedIndex > -1 Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox351.SelectedItem
+                        value2 = ComboBox352.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox35, TextBox34, TextBox33, 5, v1, v2, 0, 3)
+                    End If
+                    If Not ((strikes3.Contains(5) Or spares3.Contains(5)) And framevalues3(4) = 0) Then
+                        TextBox35.Text = findTotal(5, 3)
+                    End If
+                    If ComboBox361.SelectedIndex > -1 AndAlso ComboBox361.SelectedItem.Equals("X") Or ComboBox362.SelectedIndex > -1 Then
+                        If strikes3.Contains(frame) And strikes3.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox361.SelectedItem
+                            value2 = ComboBox362.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox36, TextBox35, TextBox34, 6, v1, v2, 0, 3)
+                            If framevalues3(4) > 0 Then
+                                TextBox35.Text = findTotal(5, 3)
+                            End If
+                        End If
+                        If Not ((strikes3.Contains(6) Or spares3.Contains(6)) And framevalues3(5) = 0) Then
+                            TextBox36.Text = findTotal(6, 3)
+                        End If
+                        If ComboBox371.SelectedIndex > -1 AndAlso ComboBox371.SelectedItem.Equals("X") Or ComboBox372.SelectedIndex > -1 Then
+                            If Not ((strikes3.Contains(7) Or spares3.Contains(7)) And framevalues3(6) = 0) Then
+                                TextBox37.Text = findTotal(7, 3)
+                            End If
+                            If ComboBox381.SelectedIndex > -1 AndAlso ComboBox381.SelectedItem.Equals("X") Or ComboBox382.SelectedIndex > -1 Then
+                                If Not ((strikes3.Contains(8) Or spares3.Contains(8)) And framevalues3(7) = 0) Then
+                                    TextBox38.Text = findTotal(8, 3)
+                                End If
+                                If ComboBox391.SelectedIndex > -1 AndAlso ComboBox391.SelectedItem.Equals("X") Or ComboBox392.SelectedIndex > -1 Then
+                                    If Not ((strikes3.Contains(9) Or spares3.Contains(9)) And framevalues3(8) = 0) Then
+                                        TextBox39.Text = findTotal(9, 3)
+                                    End If
+                                    If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                                       (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                                        TextBox310.Text = findTotal(10, 3)
                                     End If
                                 End If
                             End If
@@ -791,78 +1937,372 @@
                     End If
                 End If
             ElseIf frame = 5 Then
-                If ComboBox362.SelectedIndex > -1 Then
-                    TextBox36.Text = findTotal(6, 1)
-                    If ComboBox372.SelectedIndex > -1 Then
-                        TextBox37.Text = findTotal(7, 1)
-                        If ComboBox382.SelectedIndex > -1 Then
-                            TextBox38.Text = findTotal(8, 1)
-                            If ComboBox392.SelectedIndex > -1 Then
-                                TextBox39.Text = findTotal(9, 1)
-                                If ComboBox3103.SelectedIndex > -1 Then
-                                    TextBox310.Text = findTotal(10, 1)
+                If ComboBox361.SelectedIndex > -1 AndAlso ComboBox361.SelectedItem.Equals("X") Or ComboBox362.SelectedIndex > -1 Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox361.SelectedItem
+                        value2 = ComboBox362.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox36, TextBox35, TextBox34, 6, v1, v2, 0, 3)
+                    End If
+                    If Not ((strikes3.Contains(6) Or spares3.Contains(6)) And framevalues3(5) = 0) Then
+                        TextBox36.Text = findTotal(6, 3)
+                    End If
+                    If ComboBox371.SelectedIndex > -1 AndAlso ComboBox371.SelectedItem.Equals("X") Or ComboBox372.SelectedIndex > -1 Then
+                        If strikes3.Contains(frame) And strikes3.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox371.SelectedItem
+                            value2 = ComboBox372.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox37, TextBox36, TextBox35, 7, v1, v2, 0, 3)
+                            If framevalues3(5) > 0 Then
+                                TextBox36.Text = findTotal(6, 3)
+                            End If
+                        End If
+                        If Not ((strikes3.Contains(7) Or spares3.Contains(7)) And framevalues3(6) = 0) Then
+                            TextBox37.Text = findTotal(7, 3)
+                        End If
+                        If ComboBox381.SelectedIndex > -1 AndAlso ComboBox381.SelectedItem.Equals("X") Or ComboBox382.SelectedIndex > -1 Then
+                            If Not ((strikes3.Contains(8) Or spares3.Contains(8)) And framevalues3(7) = 0) Then
+                                TextBox38.Text = findTotal(8, 3)
+                            End If
+                            If ComboBox391.SelectedIndex > -1 AndAlso ComboBox391.SelectedItem.Equals("X") Or ComboBox392.SelectedIndex > -1 Then
+                                If Not ((strikes3.Contains(9) Or spares3.Contains(9)) And framevalues3(8) = 0) Then
+                                    TextBox39.Text = findTotal(9, 3)
+                                End If
+                                If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                                   (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                                    TextBox310.Text = findTotal(10, 3)
                                 End If
                             End If
                         End If
                     End If
                 End If
             ElseIf frame = 6 Then
-                If ComboBox372.SelectedIndex > -1 Then
-                    TextBox37.Text = findTotal(7, 1)
-                    If ComboBox382.SelectedIndex > -1 Then
-                        TextBox38.Text = findTotal(8, 1)
-                        If ComboBox392.SelectedIndex > -1 Then
-                            TextBox39.Text = findTotal(9, 1)
-                            If ComboBox3103.SelectedIndex > -1 Then
-                                TextBox310.Text = findTotal(10, 1)
+                If ComboBox371.SelectedIndex > -1 AndAlso ComboBox371.SelectedItem.Equals("X") Or ComboBox372.SelectedIndex > -1 Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox371.SelectedItem
+                        value2 = ComboBox372.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox37, TextBox36, TextBox35, 7, v1, v2, 0, 3)
+                    End If
+                    If Not ((strikes3.Contains(7) Or spares3.Contains(7)) And framevalues3(6) = 0) Then
+                        TextBox37.Text = findTotal(7, 3)
+                    End If
+                    If ComboBox381.SelectedIndex > -1 AndAlso ComboBox381.SelectedItem.Equals("X") Or ComboBox382.SelectedIndex > -1 Then
+                        If strikes3.Contains(frame) And strikes3.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox381.SelectedItem
+                            value2 = ComboBox382.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox38, TextBox37, TextBox36, 8, v1, v2, 0, 3)
+                            If framevalues3(6) > 0 Then
+                                TextBox37.Text = findTotal(7, 3)
+                            End If
+                        End If
+                        If Not ((strikes3.Contains(8) Or spares3.Contains(8)) And framevalues3(7) = 0) Then
+                            TextBox38.Text = findTotal(8, 3)
+                        End If
+                        If ComboBox391.SelectedIndex > -1 AndAlso ComboBox391.SelectedItem.Equals("X") Or ComboBox392.SelectedIndex > -1 Then
+                            If Not ((strikes3.Contains(9) Or spares3.Contains(9)) And framevalues3(8) = 0) Then
+                                TextBox39.Text = findTotal(9, 3)
+                            End If
+                            If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                               (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                                TextBox310.Text = findTotal(10, 3)
                             End If
                         End If
                     End If
                 End If
             ElseIf frame = 7 Then
-                If ComboBox382.SelectedIndex > -1 Then
-                    TextBox38.Text = findTotal(8, 1)
-                    If ComboBox392.SelectedIndex > -1 Then
-                        TextBox39.Text = findTotal(9, 1)
-                        If ComboBox3103.SelectedIndex > -1 Then
-                            TextBox310.Text = findTotal(10, 1)
+                If ComboBox381.SelectedIndex > -1 AndAlso ComboBox381.SelectedItem.Equals("X") Or ComboBox382.SelectedIndex > -1 Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox381.SelectedItem
+                        value2 = ComboBox382.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox38, TextBox37, TextBox36, 8, v1, v2, 0, 3)
+                    End If
+                    If Not ((strikes3.Contains(8) Or spares3.Contains(8)) And framevalues3(7) = 0) Then
+                        TextBox38.Text = findTotal(8, 3)
+                    End If
+                    If ComboBox391.SelectedIndex > -1 AndAlso ComboBox391.SelectedItem.Equals("X") Or ComboBox392.SelectedIndex > -1 Then
+                        If strikes3.Contains(frame) And strikes3.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox391.SelectedItem
+                            value2 = ComboBox392.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox39, TextBox38, TextBox37, 9, v1, v2, 0, 3)
+                            If framevalues3(7) > 0 Then
+                                TextBox38.Text = findTotal(8, 3)
+                            End If
+                        End If
+                        If Not ((strikes3.Contains(9) Or spares3.Contains(9)) And framevalues3(8) = 0) Then
+                            TextBox39.Text = findTotal(9, 3)
+                        End If
+                        If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                           (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                            TextBox310.Text = findTotal(10, 3)
                         End If
                     End If
                 End If
             ElseIf frame = 8 Then
-                If ComboBox392.SelectedIndex > -1 Then
-                    TextBox39.Text = findTotal(9, 1)
-                    If ComboBox3103.SelectedIndex > -1 Then
-                        TextBox310.Text = findTotal(10, 1)
+                If ComboBox391.SelectedIndex > -1 AndAlso ComboBox391.SelectedItem.Equals("X") Or ComboBox392.SelectedIndex > -1 Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox391.SelectedItem
+                        value2 = ComboBox392.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox39, TextBox38, TextBox37, 9, v1, v2, 0, 3)
+                    End If
+                    If Not ((strikes3.Contains(9) Or spares3.Contains(9)) And framevalues3(8) = 0) Then
+                        TextBox39.Text = findTotal(9, 3)
+                    End If
+                    If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                     (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                        If strikes3.Contains(frame) And strikes3.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim value3 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            Dim v3 As Integer
+                            value1 = ComboBox3101.SelectedItem
+                            value2 = ComboBox3102.SelectedItem
+                            value3 = ComboBox3103.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                            Else
+                                v1 = CInt(value1)
+                            End If
+
+                            If value2.Equals("X") Then
+                                v2 = 10
+                            ElseIf value2.Equals("/") Then
+                                v2 = 10 - v1
+                            Else
+                                v2 = CInt(value2)
+                            End If
+
+                            If value3.Equals("X") Then
+                                v3 = 10
+                            ElseIf value3.Equals("/") Then
+                                v3 = 10 - v2
+                            Else
+                                v3 = CInt(value3)
+                            End If
+                            Calculate(TextBox310, TextBox39, TextBox38, 10, v1, v2, v3, 3)
+                            If framevalues3(8) > 0 Then
+                                TextBox39.Text = findTotal(9, 3)
+                            End If
+                        End If
+                        TextBox310.Text = findTotal(10, 3)
                     End If
                 End If
             ElseIf frame = 9 Then
-                If ComboBox3103.SelectedIndex > -1 Then
-                    TextBox310.Text = findTotal(10, 1)
+                If ComboBox3103.SelectedIndex > -1 Or ComboBox3102.SelectedIndex > -1 AndAlso
+                    (Not ComboBox3101.SelectedItem.Equals("X") And Not ComboBox3102.SelectedItem.Equals("/")) Then
+                    If strikes3.Contains(frame) Or spares3.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim value3 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        Dim v3 As Integer
+                        value1 = ComboBox3101.SelectedItem
+                        value2 = ComboBox3102.SelectedItem
+                        value3 = ComboBox3103.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                        Else
+                            v1 = CInt(value1)
+                        End If
+
+                        If value2.Equals("X") Then
+                            v2 = 10
+                        ElseIf value2.Equals("/") Then
+                            v2 = 10 - v1
+                        Else
+                            v2 = CInt(value2)
+                        End If
+
+                        If value3.Equals("X") Then
+                            v3 = 10
+                        ElseIf value3.Equals("/") Then
+                            v3 = 10 - v2
+                        Else
+                            v3 = CInt(value3)
+                        End If
+                        Calculate(TextBox310, TextBox39, TextBox38, 10, v1, v2, v3, 3)
+                    End If
+                    TextBox310.Text = findTotal(10, 3)
                 End If
             Else
                 'this should never happen
             End If
         ElseIf n = 4 Then
             If frame = 1 Then
-                If ComboBox422.SelectedIndex > -1 Then
-                    TextBox42.Text = findTotal(2, 1)
-                    If ComboBox432.SelectedIndex > -1 Then
-                        TextBox43.Text = findTotal(3, 1)
-                        If ComboBox442.SelectedIndex > -1 Then
-                            TextBox44.Text = findTotal(4, 1)
-                            If ComboBox452.SelectedIndex > -1 Then
-                                TextBox45.Text = findTotal(5, 1)
-                                If ComboBox462.SelectedIndex > -1 Then
-                                    TextBox46.Text = findTotal(6, 1)
-                                    If ComboBox472.SelectedIndex > -1 Then
-                                        TextBox47.Text = findTotal(7, 1)
-                                        If ComboBox482.SelectedIndex > -1 Then
-                                            TextBox48.Text = findTotal(8, 1)
-                                            If ComboBox492.SelectedIndex > -1 Then
-                                                TextBox49.Text = findTotal(9, 1)
-                                                If ComboBox4103.SelectedIndex > -1 Then
-                                                    TextBox410.Text = findTotal(10, 1)
+                If ComboBox421.SelectedIndex > -1 AndAlso ComboBox421.SelectedItem.Equals("X") Or ComboBox422.SelectedIndex > -1 Then
+                    If strikes4.Contains(frame) Or spares4.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox421.SelectedItem
+                        value2 = ComboBox422.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox42, TextBox41, TextBox41, 2, v1, v2, 0, 4)
+                    End If
+                    If Not ((strikes4.Contains(2) Or spares4.Contains(2)) And framevalues4(1) = 0) Then
+                        TextBox42.Text = findTotal(2, 4)
+                    End If
+                    If ComboBox431.SelectedIndex > -1 AndAlso ComboBox431.SelectedItem.Equals("X") Or ComboBox432.SelectedIndex > -1 Then
+                        If strikes4.Contains(frame) And strikes4.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox431.SelectedItem
+                            value2 = ComboBox432.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox43, TextBox42, TextBox41, 3, v1, v2, 0, 4)
+                            If framevalues4(1) > 0 Then
+                                TextBox42.Text = findTotal(2, 4)
+                            End If
+                        End If
+                        If Not ((strikes4.Contains(3) Or spares4.Contains(3)) And framevalues4(2) = 0) Then
+                            TextBox43.Text = findTotal(3, 4)
+                        End If
+                        If ComboBox441.SelectedIndex > -1 AndAlso ComboBox441.SelectedItem.Equals("X") Or ComboBox442.SelectedIndex > -1 Then
+                            If Not ((strikes4.Contains(4) Or spares4.Contains(4)) And framevalues4(3) = 0) Then
+                                TextBox44.Text = findTotal(4, 4)
+                            End If
+                            If ComboBox451.SelectedIndex > -1 AndAlso ComboBox451.SelectedItem.Equals("X") Or ComboBox452.SelectedIndex > -1 Then
+                                If Not ((strikes4.Contains(5) Or spares4.Contains(5)) And framevalues4(4) = 0) Then
+                                    TextBox45.Text = findTotal(5, 4)
+                                End If
+                                If ComboBox461.SelectedIndex > -1 AndAlso ComboBox461.SelectedItem.Equals("X") Or ComboBox462.SelectedIndex > -1 Then
+                                    If Not ((strikes4.Contains(6) Or spares4.Contains(6)) And framevalues4(5) = 0) Then
+                                        TextBox46.Text = findTotal(6, 4)
+                                    End If
+                                    If ComboBox471.SelectedIndex > -1 AndAlso ComboBox471.SelectedItem.Equals("X") Or ComboBox472.SelectedIndex > -1 Then
+                                        If Not ((strikes4.Contains(7) Or spares4.Contains(7)) And framevalues4(6) = 0) Then
+                                            TextBox47.Text = findTotal(7, 4)
+                                        End If
+                                        If ComboBox481.SelectedIndex > -1 AndAlso ComboBox481.SelectedItem.Equals("X") Or ComboBox482.SelectedIndex > -1 Then
+                                            If Not ((strikes4.Contains(8) Or spares4.Contains(8)) And framevalues4(7) = 0) Then
+                                                TextBox48.Text = findTotal(8, 4)
+                                            End If
+                                            If ComboBox491.SelectedIndex > -1 AndAlso ComboBox491.SelectedItem.Equals("X") Or ComboBox492.SelectedIndex > -1 Then
+                                                If Not ((strikes4.Contains(9) Or spares4.Contains(9)) And framevalues4(8) = 0) Then
+                                                    TextBox49.Text = findTotal(9, 4)
+                                                End If
+                                                If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                                                   (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                                                    TextBox410.Text = findTotal(10, 4)
                                                 End If
                                             End If
                                         End If
@@ -873,22 +2313,78 @@
                     End If
                 End If
             ElseIf frame = 2 Then
-                If ComboBox432.SelectedIndex > -1 Then
-                    TextBox43.Text = findTotal(3, 1)
-                    If ComboBox442.SelectedIndex > -1 Then
-                        TextBox44.Text = findTotal(4, 1)
-                        If ComboBox452.SelectedIndex > -1 Then
-                            TextBox45.Text = findTotal(5, 1)
-                            If ComboBox462.SelectedIndex > -1 Then
-                                TextBox46.Text = findTotal(6, 1)
-                                If ComboBox472.SelectedIndex > -1 Then
-                                    TextBox47.Text = findTotal(7, 1)
-                                    If ComboBox482.SelectedIndex > -1 Then
-                                        TextBox48.Text = findTotal(8, 1)
-                                        If ComboBox492.SelectedIndex > -1 Then
-                                            TextBox49.Text = findTotal(9, 1)
-                                            If ComboBox4103.SelectedIndex > -1 Then
-                                                TextBox410.Text = findTotal(10, 1)
+                If ComboBox431.SelectedIndex > -1 AndAlso ComboBox431.SelectedItem.Equals("X") Or ComboBox432.SelectedIndex > -1 Then
+                    If strikes4.Contains(frame) Or spares4.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox431.SelectedItem
+                        value2 = ComboBox432.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox43, TextBox42, TextBox41, 3, v1, v2, 0, 4)
+                    End If
+                    If Not ((strikes4.Contains(3) Or spares4.Contains(3)) And framevalues4(2) = 0) Then
+                        TextBox43.Text = findTotal(3, 4)
+                    End If
+                    If ComboBox441.SelectedIndex > -1 AndAlso ComboBox441.SelectedItem.Equals("X") Or ComboBox442.SelectedIndex > -1 Then
+                        If strikes4.Contains(frame) And strikes4.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox441.SelectedItem
+                            value2 = ComboBox442.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox44, TextBox43, TextBox42, 4, v1, v2, 0, 4)
+                            If framevalues4(2) > 0 Then
+                                TextBox43.Text = findTotal(3, 4)
+                            End If
+                        End If
+                        If Not ((strikes4.Contains(4) Or spares4.Contains(4)) And framevalues4(3) = 0) Then
+                            TextBox44.Text = findTotal(4, 4)
+                        End If
+                        If ComboBox451.SelectedIndex > -1 AndAlso ComboBox451.SelectedItem.Equals("X") Or ComboBox452.SelectedIndex > -1 Then
+                            If Not ((strikes4.Contains(5) Or spares4.Contains(5)) And framevalues4(4) = 0) Then
+                                TextBox45.Text = findTotal(5, 4)
+                            End If
+                            If ComboBox461.SelectedIndex > -1 AndAlso ComboBox461.SelectedItem.Equals("X") Or ComboBox462.SelectedIndex > -1 Then
+                                If Not ((strikes4.Contains(6) Or spares4.Contains(6)) And framevalues4(5) = 0) Then
+                                    TextBox46.Text = findTotal(6, 4)
+                                End If
+                                If ComboBox471.SelectedIndex > -1 AndAlso ComboBox471.SelectedItem.Equals("X") Or ComboBox472.SelectedIndex > -1 Then
+                                    If Not ((strikes4.Contains(7) Or spares4.Contains(7)) And framevalues4(6) = 0) Then
+                                        TextBox47.Text = findTotal(7, 4)
+                                    End If
+                                    If ComboBox481.SelectedIndex > -1 AndAlso ComboBox481.SelectedItem.Equals("X") Or ComboBox482.SelectedIndex > -1 Then
+                                        If Not ((strikes4.Contains(8) Or spares4.Contains(8)) And framevalues4(7) = 0) Then
+                                            TextBox48.Text = findTotal(8, 4)
+                                        End If
+                                        If ComboBox491.SelectedIndex > -1 AndAlso ComboBox491.SelectedItem.Equals("X") Or ComboBox492.SelectedIndex > -1 Then
+                                            If Not ((strikes4.Contains(9) Or spares4.Contains(9)) And framevalues4(8) = 0) Then
+                                                TextBox49.Text = findTotal(9, 4)
+                                            End If
+                                            If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                                               (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                                                TextBox410.Text = findTotal(10, 4)
                                             End If
                                         End If
                                     End If
@@ -898,20 +2394,74 @@
                     End If
                 End If
             ElseIf frame = 3 Then
-                If ComboBox442.SelectedIndex > -1 Then
-                    TextBox44.Text = findTotal(4, 1)
-                    If ComboBox452.SelectedIndex > -1 Then
-                        TextBox45.Text = findTotal(5, 1)
-                        If ComboBox462.SelectedIndex > -1 Then
-                            TextBox46.Text = findTotal(6, 1)
-                            If ComboBox472.SelectedIndex > -1 Then
-                                TextBox47.Text = findTotal(7, 1)
-                                If ComboBox482.SelectedIndex > -1 Then
-                                    TextBox48.Text = findTotal(8, 1)
-                                    If ComboBox492.SelectedIndex > -1 Then
-                                        TextBox49.Text = findTotal(9, 1)
-                                        If ComboBox4103.SelectedIndex > -1 Then
-                                            TextBox410.Text = findTotal(10, 1)
+                If ComboBox441.SelectedIndex > -1 AndAlso ComboBox441.SelectedItem.Equals("X") Or ComboBox442.SelectedIndex > -1 Then
+                    If strikes4.Contains(frame) Or spares4.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox441.SelectedItem
+                        value2 = ComboBox442.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox44, TextBox43, TextBox42, 4, v1, v2, 0, 4)
+                    End If
+                    If Not ((strikes4.Contains(4) Or spares4.Contains(4)) And framevalues4(3) = 0) Then
+                        TextBox44.Text = findTotal(4, 4)
+                    End If
+                    If ComboBox451.SelectedIndex > -1 AndAlso ComboBox451.SelectedItem.Equals("X") Or ComboBox452.SelectedIndex > -1 Then
+                        If strikes4.Contains(frame) And strikes4.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox451.SelectedItem
+                            value2 = ComboBox452.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox45, TextBox44, TextBox43, 5, v1, v2, 0, 4)
+                            If framevalues4(3) > 0 Then
+                                TextBox44.Text = findTotal(4, 4)
+                            End If
+                        End If
+                        If Not ((strikes4.Contains(5) Or spares4.Contains(5)) And framevalues4(4) = 0) Then
+                            TextBox45.Text = findTotal(5, 4)
+                        End If
+                        If ComboBox461.SelectedIndex > -1 AndAlso ComboBox461.SelectedItem.Equals("X") Or ComboBox462.SelectedIndex > -1 Then
+                            If Not ((strikes4.Contains(6) Or spares4.Contains(6)) And framevalues4(5) = 0) Then
+                                TextBox46.Text = findTotal(6, 4)
+                            End If
+                            If ComboBox471.SelectedIndex > -1 AndAlso ComboBox471.SelectedItem.Equals("X") Or ComboBox472.SelectedIndex > -1 Then
+                                If Not ((strikes4.Contains(7) Or spares4.Contains(7)) And framevalues4(6) = 0) Then
+                                    TextBox47.Text = findTotal(7, 4)
+                                End If
+                                If ComboBox481.SelectedIndex > -1 AndAlso ComboBox481.SelectedItem.Equals("X") Or ComboBox482.SelectedIndex > -1 Then
+                                    If Not ((strikes4.Contains(8) Or spares4.Contains(8)) And framevalues4(7) = 0) Then
+                                        TextBox48.Text = findTotal(8, 4)
+                                    End If
+                                    If ComboBox491.SelectedIndex > -1 AndAlso ComboBox491.SelectedItem.Equals("X") Or ComboBox492.SelectedIndex > -1 Then
+                                        If Not ((strikes4.Contains(9) Or spares4.Contains(9)) And framevalues4(8) = 0) Then
+                                            TextBox49.Text = findTotal(9, 4)
+                                        End If
+                                        If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                                           (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                                            TextBox410.Text = findTotal(10, 4)
                                         End If
                                     End If
                                 End If
@@ -920,18 +2470,70 @@
                     End If
                 End If
             ElseIf frame = 4 Then
-                If ComboBox452.SelectedIndex > -1 Then
-                    TextBox45.Text = findTotal(5, 1)
-                    If ComboBox462.SelectedIndex > -1 Then
-                        TextBox46.Text = findTotal(6, 1)
-                        If ComboBox472.SelectedIndex > -1 Then
-                            TextBox47.Text = findTotal(7, 1)
-                            If ComboBox482.SelectedIndex > -1 Then
-                                TextBox48.Text = findTotal(8, 1)
-                                If ComboBox492.SelectedIndex > -1 Then
-                                    TextBox49.Text = findTotal(9, 1)
-                                    If ComboBox4103.SelectedIndex > -1 Then
-                                        TextBox410.Text = findTotal(10, 1)
+                If ComboBox451.SelectedIndex > -1 AndAlso ComboBox451.SelectedItem.Equals("X") Or ComboBox452.SelectedIndex > -1 Then
+                    If strikes4.Contains(frame) Or spares4.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox451.SelectedItem
+                        value2 = ComboBox452.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox45, TextBox44, TextBox43, 5, v1, v2, 0, 4)
+                    End If
+                    If Not ((strikes4.Contains(5) Or spares4.Contains(5)) And framevalues4(4) = 0) Then
+                        TextBox45.Text = findTotal(5, 4)
+                    End If
+                    If ComboBox461.SelectedIndex > -1 AndAlso ComboBox461.SelectedItem.Equals("X") Or ComboBox462.SelectedIndex > -1 Then
+                        If strikes4.Contains(frame) And strikes4.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox461.SelectedItem
+                            value2 = ComboBox462.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox46, TextBox45, TextBox44, 6, v1, v2, 0, 4)
+                            If framevalues4(4) > 0 Then
+                                TextBox45.Text = findTotal(5, 4)
+                            End If
+                        End If
+                        If Not ((strikes4.Contains(6) Or spares4.Contains(6)) And framevalues4(5) = 0) Then
+                            TextBox46.Text = findTotal(6, 4)
+                        End If
+                        If ComboBox471.SelectedIndex > -1 AndAlso ComboBox471.SelectedItem.Equals("X") Or ComboBox472.SelectedIndex > -1 Then
+                            If Not ((strikes4.Contains(7) Or spares4.Contains(7)) And framevalues4(6) = 0) Then
+                                TextBox47.Text = findTotal(7, 4)
+                            End If
+                            If ComboBox481.SelectedIndex > -1 AndAlso ComboBox481.SelectedItem.Equals("X") Or ComboBox482.SelectedIndex > -1 Then
+                                If Not ((strikes4.Contains(8) Or spares4.Contains(8)) And framevalues4(7) = 0) Then
+                                    TextBox48.Text = findTotal(8, 4)
+                                End If
+                                If ComboBox491.SelectedIndex > -1 AndAlso ComboBox491.SelectedItem.Equals("X") Or ComboBox492.SelectedIndex > -1 Then
+                                    If Not ((strikes4.Contains(9) Or spares4.Contains(9)) And framevalues4(8) = 0) Then
+                                        TextBox49.Text = findTotal(9, 4)
+                                    End If
+                                    If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                                       (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                                        TextBox410.Text = findTotal(10, 4)
                                     End If
                                 End If
                             End If
@@ -939,57 +2541,286 @@
                     End If
                 End If
             ElseIf frame = 5 Then
-                If ComboBox462.SelectedIndex > -1 Then
-                    TextBox46.Text = findTotal(6, 1)
-                    If ComboBox472.SelectedIndex > -1 Then
-                        TextBox47.Text = findTotal(7, 1)
-                        If ComboBox482.SelectedIndex > -1 Then
-                            TextBox48.Text = findTotal(8, 1)
-                            If ComboBox492.SelectedIndex > -1 Then
-                                TextBox49.Text = findTotal(9, 1)
-                                If ComboBox4103.SelectedIndex > -1 Then
-                                    TextBox410.Text = findTotal(10, 1)
-                                End If
+                If ComboBox461.SelectedIndex > -1 AndAlso ComboBox461.SelectedItem.Equals("X") Or ComboBox462.SelectedIndex > -1 Then
+                    If strikes1.Contains(frame) Or spares4.Contains(frame) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox461.SelectedItem
+                        value2 = ComboBox462.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox46, TextBox45, TextBox44, 6, v1, v2, 0, 4)
+                    End If
+                    If Not ((strikes4.Contains(6) Or spares4.Contains(6)) And framevalues4(5) = 0) Then
+                        TextBox46.Text = findTotal(6, 4)
+                    End If
+                    If ComboBox471.SelectedIndex > -1 AndAlso ComboBox471.SelectedItem.Equals("X") Or ComboBox472.SelectedIndex > -1 Then
+                        If strikes4.Contains(frame) And strikes4.Contains(frame + 1) Then
+                            Dim value1 As String
+                            Dim value2 As String
+                            Dim v1 As Integer
+                            Dim v2 As Integer
+                            value1 = ComboBox471.SelectedItem
+                            value2 = ComboBox472.SelectedItem
+                            If value1.Equals("X") Then
+                                v1 = 10
+                                v2 = 0
+                            ElseIf value2.Equals("/") Then
+                                v1 = CInt(value1)
+                                v2 = 10 - v1
+                            Else
+                                v1 = CInt(value1)
+                                v2 = CInt(value2)
+                            End If
+                            Calculate(TextBox47, TextBox46, TextBox45, 7, v1, v2, 0, 4)
+                            If framevalues4(5) > 0 Then
+                                TextBox46.Text = findTotal(6, 4)
+                            End If
+                        End If
+                        If Not ((strikes4.Contains(7) Or spares4.Contains(7)) And framevalues4(6) = 0) Then
+                            TextBox47.Text = findTotal(7, 4)
+                        End If
+                        If ComboBox491.SelectedIndex > -1 AndAlso ComboBox491.SelectedItem.Equals("X") Or ComboBox492.SelectedIndex > -1 Then
+                            If Not ((strikes4.Contains(9) Or spares4.Contains(9)) And framevalues4(8) = 0) Then
+                                TextBox49.Text = findTotal(9, 4)
+                            End If
+                            If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                               (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                                TextBox410.Text = findTotal(10, 4)
                             End If
                         End If
                     End If
                 End If
-            ElseIf frame = 6 Then
-                If ComboBox472.SelectedIndex > -1 Then
-                    TextBox47.Text = findTotal(7, 1)
-                    If ComboBox482.SelectedIndex > -1 Then
-                        TextBox48.Text = findTotal(8, 1)
-                        If ComboBox492.SelectedIndex > -1 Then
-                            TextBox49.Text = findTotal(9, 1)
-                            If ComboBox4103.SelectedIndex > -1 Then
-                                TextBox410.Text = findTotal(10, 1)
-                            End If
+            End If
+        ElseIf frame = 6 Then
+            If ComboBox471.SelectedIndex > -1 AndAlso ComboBox471.SelectedItem.Equals("X") Or ComboBox472.SelectedIndex > -1 Then
+                If strikes4.Contains(frame) Or spares4.Contains(frame) Then
+                    Dim value1 As String
+                    Dim value2 As String
+                    Dim v1 As Integer
+                    Dim v2 As Integer
+                    value1 = ComboBox471.SelectedItem
+                    value2 = ComboBox472.SelectedItem
+                    If value1.Equals("X") Then
+                        v1 = 10
+                        v2 = 0
+                    ElseIf value2.Equals("/") Then
+                        v1 = CInt(value1)
+                        v2 = 10 - v1
+                    Else
+                        v1 = CInt(value1)
+                        v2 = CInt(value2)
+                    End If
+                    Calculate(TextBox47, TextBox46, TextBox45, 7, v1, v2, 0, 4)
+                End If
+                If Not ((strikes4.Contains(7) Or spares4.Contains(7)) And framevalues4(6) = 0) Then
+                    TextBox47.Text = findTotal(7, 4)
+                End If
+                If ComboBox481.SelectedIndex > -1 AndAlso ComboBox481.SelectedItem.Equals("X") Or ComboBox482.SelectedIndex > -1 Then
+                    If strikes4.Contains(frame) And strikes4.Contains(frame + 1) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox481.SelectedItem
+                        value2 = ComboBox482.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox48, TextBox47, TextBox46, 8, v1, v2, 0, 4)
+                        If framevalues4(6) > 0 Then
+                            TextBox47.Text = findTotal(7, 4)
+                        End If
+                    End If
+                    If Not ((strikes4.Contains(8) Or spares4.Contains(8)) And framevalues4(7) = 0) Then
+                        TextBox48.Text = findTotal(8, 4)
+                    End If
+                    If ComboBox491.SelectedIndex > -1 AndAlso ComboBox491.SelectedItem.Equals("X") Or ComboBox492.SelectedIndex > -1 Then
+                        If Not ((strikes4.Contains(9) Or spares4.Contains(9)) And framevalues4(8) = 0) Then
+                            TextBox49.Text = findTotal(9, 4)
+                        End If
+                        If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                           (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                            TextBox410.Text = findTotal(10, 4)
                         End If
                     End If
                 End If
-            ElseIf frame = 7 Then
-                If ComboBox482.SelectedIndex > -1 Then
-                    TextBox48.Text = findTotal(8, 1)
-                    If ComboBox492.SelectedIndex > -1 Then
-                        TextBox49.Text = findTotal(9, 1)
-                        If ComboBox4103.SelectedIndex > -1 Then
-                            TextBox410.Text = findTotal(10, 1)
+            End If
+        ElseIf frame = 7 Then
+            If ComboBox481.SelectedIndex > -1 AndAlso ComboBox481.SelectedItem.Equals("X") Or ComboBox482.SelectedIndex > -1 Then
+                If strikes1.Contains(frame) Or spares4.Contains(frame) Then
+                    Dim value1 As String
+                    Dim value2 As String
+                    Dim v1 As Integer
+                    Dim v2 As Integer
+                    value1 = ComboBox481.SelectedItem
+                    value2 = ComboBox482.SelectedItem
+                    If value1.Equals("X") Then
+                        v1 = 10
+                        v2 = 0
+                    ElseIf value2.Equals("/") Then
+                        v1 = CInt(value1)
+                        v2 = 10 - v1
+                    Else
+                        v1 = CInt(value1)
+                        v2 = CInt(value2)
+                    End If
+                    Calculate(TextBox48, TextBox47, TextBox46, 8, v1, v2, 0, 4)
+                End If
+                If Not ((strikes4.Contains(8) Or spares4.Contains(8)) And framevalues4(7) = 0) Then
+                    TextBox48.Text = findTotal(8, 4)
+                End If
+                If ComboBox491.SelectedIndex > -1 AndAlso ComboBox491.SelectedItem.Equals("X") Or ComboBox492.SelectedIndex > -1 Then
+                    If strikes4.Contains(frame) And strikes4.Contains(frame + 1) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        value1 = ComboBox491.SelectedItem
+                        value2 = ComboBox492.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                            v2 = 0
+                        ElseIf value2.Equals("/") Then
+                            v1 = CInt(value1)
+                            v2 = 10 - v1
+                        Else
+                            v1 = CInt(value1)
+                            v2 = CInt(value2)
+                        End If
+                        Calculate(TextBox49, TextBox48, TextBox47, 9, v1, v2, 0, 4)
+                        If framevalues4(7) > 0 Then
+                            TextBox48.Text = findTotal(8, 4)
                         End If
                     End If
-                End If
-            ElseIf frame = 8 Then
-                If ComboBox492.SelectedIndex > -1 Then
-                    TextBox49.Text = findTotal(9, 1)
-                    If ComboBox4103.SelectedIndex > -1 Then
-                        TextBox410.Text = findTotal(10, 1)
+                    If Not ((strikes4.Contains(9) Or spares4.Contains(9)) And framevalues4(8) = 0) Then
+                        TextBox49.Text = findTotal(9, 4)
+                    End If
+                    If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                      (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                        TextBox410.Text = findTotal(10, 4)
                     End If
                 End If
-            ElseIf frame = 9 Then
-                If ComboBox4103.SelectedIndex > -1 Then
-                    TextBox410.Text = findTotal(10, 1)
+            End If
+        ElseIf frame = 8 Then
+            If ComboBox491.SelectedIndex > -1 AndAlso ComboBox491.SelectedItem.Equals("X") Or ComboBox492.SelectedIndex > -1 Then
+                If strikes4.Contains(frame) Or spares4.Contains(frame) Then
+                    Dim value1 As String
+                    Dim value2 As String
+                    Dim v1 As Integer
+                    Dim v2 As Integer
+                    value1 = ComboBox491.SelectedItem
+                    value2 = ComboBox492.SelectedItem
+                    If value1.Equals("X") Then
+                        v1 = 10
+                        v2 = 0
+                    ElseIf value2.Equals("/") Then
+                        v1 = CInt(value1)
+                        v2 = 10 - v1
+                    Else
+                        v1 = CInt(value1)
+                        v2 = CInt(value2)
+                    End If
+                    Calculate(TextBox49, TextBox48, TextBox47, 9, v1, v2, 0, 4)
                 End If
-            Else
-                'this should never happen
+                If Not ((strikes4.Contains(9) Or spares4.Contains(9)) And framevalues4(8) = 0) Then
+                    TextBox49.Text = findTotal(9, 4)
+                End If
+                If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                 (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                    If strikes4.Contains(frame) And strikes4.Contains(frame + 1) Then
+                        Dim value1 As String
+                        Dim value2 As String
+                        Dim value3 As String
+                        Dim v1 As Integer
+                        Dim v2 As Integer
+                        Dim v3 As Integer
+                        value1 = ComboBox4101.SelectedItem
+                        value2 = ComboBox4102.SelectedItem
+                        value3 = ComboBox4103.SelectedItem
+                        If value1.Equals("X") Then
+                            v1 = 10
+                        Else
+                            v1 = CInt(value1)
+                        End If
+
+                        If value2.Equals("X") Then
+                            v2 = 10
+                        ElseIf value2.Equals("/") Then
+                            v2 = 10 - v1
+                        Else
+                            v2 = CInt(value2)
+                        End If
+
+                        If value3.Equals("X") Then
+                            v3 = 10
+                        ElseIf value3.Equals("/") Then
+                            v3 = 10 - v2
+                        Else
+                            v3 = CInt(value3)
+                        End If
+                        Calculate(TextBox410, TextBox49, TextBox48, 10, v1, v2, v3, 4)
+                        If framevalues4(8) > 0 Then
+                            TextBox49.Text = findTotal(9, 4)
+                        End If
+                    End If
+                    TextBox410.Text = findTotal(10, 4)
+                End If
+            End If
+        ElseIf frame = 9 Then
+            If ComboBox4103.SelectedIndex > -1 Or ComboBox4102.SelectedIndex > -1 AndAlso
+                (Not ComboBox4101.SelectedItem.Equals("X") And Not ComboBox4102.SelectedItem.Equals("/")) Then
+                If strikes4.Contains(frame) Or spares4.Contains(frame) Then
+                    Dim value1 As String
+                    Dim value2 As String
+                    Dim value3 As String
+                    Dim v1 As Integer
+                    Dim v2 As Integer
+                    Dim v3 As Integer
+                    value1 = ComboBox4101.SelectedItem
+                    value2 = ComboBox4102.SelectedItem
+                    value3 = ComboBox4103.SelectedItem
+                    If value1.Equals("X") Then
+                        v1 = 10
+                    Else
+                        v1 = CInt(value1)
+                    End If
+
+                    If value2.Equals("X") Then
+                        v2 = 10
+                    ElseIf value2.Equals("/") Then
+                        v2 = 10 - v1
+                    Else
+                        v2 = CInt(value2)
+                    End If
+
+                    If value3.Equals("X") Then
+                        v3 = 10
+                    ElseIf value3.Equals("/") Then
+                        v3 = 10 - v2
+                    Else
+                        v3 = CInt(value3)
+                    End If
+                    Calculate(TextBox410, TextBox49, TextBox48, 10, v1, v2, v3, 4)
+                End If
+                TextBox410.Text = findTotal(10, 4)
             End If
         Else
             'this should never happen
@@ -1346,6 +3177,8 @@
                 Next
                 ComboBox1102.Items.Add("X")
                 ComboBox1102.Enabled = True
+                ComboBox1103.Items.Clear()
+                TextBox110.Text = ""
             Else
                 ComboBox1102.Items.Clear()
                 For i As Integer = 0 To (9 - value) Step 1
@@ -1353,6 +3186,8 @@
                 Next
                 ComboBox1102.Items.Add("/")
                 ComboBox1102.Enabled = True
+                ComboBox1103.Items.Clear()
+                TextBox110.Text = ""
             End If
         End If
     End Sub
@@ -1367,11 +3202,34 @@
         If Not String.IsNullOrEmpty(value1) And Not String.IsNullOrEmpty(value2) Then
             If value1.Equals("X") Then
                 ComboBox1103.Enabled = True
+                If Not value2.Equals("X") Then
+                    ComboBox1103.Items.Clear()
+                    For i As Integer = 0 To (9 - CInt(value2)) Step 1
+                        ComboBox1103.Items.Add(i)
+                    Next
+                    ComboBox1103.Items.Add("/")
+                Else
+                    ComboBox1103.Items.Clear()
+                    For i As Integer = 0 To 9 Step 1
+                        ComboBox1103.Items.Add(i)
+                    Next
+                    ComboBox1103.Items.Add("X")
+                End If
+                TextBox110.Text = ""
             Else
                 If value2.Equals("/") Then
+                    ComboBox1103.Items.Clear()
+                    For i As Integer = 0 To 9 Step 1
+                        ComboBox1103.Items.Add(i)
+                    Next
+                    ComboBox1103.Items.Add("X")
                     ComboBox1103.Enabled = True
+                    TextBox110.Text = ""
                 Else
+                    v1 = CInt(value1)
+                    v2 = CInt(value2)
                     ComboBox1103.Enabled = False
+                    ComboBox1103.Items.Clear()
                     Calculate(TextBox110, TextBox19, TextBox18, 10, v1, v2, 0, 1)
                 End If
             End If
@@ -1394,6 +3252,7 @@
             Else
                 v1 = CInt(value1)
             End If
+
             If value2.Equals("X") Then
                 v2 = 10
             ElseIf value2.Equals("/") Then
@@ -1401,11 +3260,15 @@
             Else
                 v2 = CInt(value2)
             End If
+
             If value3.Equals("X") Then
                 v3 = 10
+            ElseIf value3.Equals("/") Then
+                v3 = 10 - v2
             Else
                 v3 = CInt(value3)
             End If
+
             Calculate(TextBox110, TextBox19, TextBox18, 10, v1, v2, v3, 1)
         End If
     End Sub
@@ -1753,7 +3616,9 @@
                     ComboBox2102.Items.Add(i)
                 Next
                 ComboBox2102.Items.Add("X")
-                ComboBox2101.Enabled = True
+                ComboBox2102.Enabled = True
+                ComboBox2103.Items.Clear()
+                TextBox210.Text = ""
             Else
                 ComboBox2102.Items.Clear()
                 For i As Integer = 0 To (9 - value) Step 1
@@ -1761,6 +3626,8 @@
                 Next
                 ComboBox2102.Items.Add("/")
                 ComboBox2102.Enabled = True
+                ComboBox2103.Items.Clear()
+                TextBox210.Text = ""
             End If
         End If
     End Sub
@@ -1775,12 +3642,35 @@
         If Not String.IsNullOrEmpty(value1) And Not String.IsNullOrEmpty(value2) Then
             If value1.Equals("X") Then
                 ComboBox2103.Enabled = True
+                If Not value2.Equals("X") Then
+                    ComboBox2103.Items.Clear()
+                    For i As Integer = 0 To (9 - CInt(value2)) Step 1
+                        ComboBox2103.Items.Add(i)
+                    Next
+                    ComboBox2103.Items.Add("/")
+                Else
+                    ComboBox2103.Items.Clear()
+                    For i As Integer = 0 To 9 Step 1
+                        ComboBox2103.Items.Add(i)
+                    Next
+                    ComboBox2103.Items.Add("X")
+                End If
+                TextBox210.Text = ""
             Else
                 If value2.Equals("/") Then
+                    ComboBox2103.Items.Clear()
+                    For i As Integer = 0 To 9 Step 1
+                        ComboBox2103.Items.Add(i)
+                    Next
+                    ComboBox2103.Items.Add("X")
                     ComboBox2103.Enabled = True
+                    TextBox210.Text = ""
                 Else
+                    v1 = CInt(value1)
+                    v2 = CInt(value2)
                     ComboBox2103.Enabled = False
-                    Calculate(TextBox210, TextBox29, TextBox28, 10, v1, v2, 0, 1)
+                    ComboBox2103.Items.Clear()
+                    Calculate(TextBox210, TextBox29, TextBox28, 10, v1, v2, 0, 2)
                 End If
             End If
         End If
@@ -1802,6 +3692,7 @@
             Else
                 v1 = CInt(value1)
             End If
+
             If value2.Equals("X") Then
                 v2 = 10
             ElseIf value2.Equals("/") Then
@@ -1809,12 +3700,16 @@
             Else
                 v2 = CInt(value2)
             End If
+
             If value3.Equals("X") Then
                 v3 = 10
+            ElseIf value3.Equals("/") Then
+                v3 = 10 - v2
             Else
                 v3 = CInt(value3)
             End If
-            Calculate(TextBox210, TextBox29, TextBox28, 10, v1, v2, v3, 1)
+
+            Calculate(TextBox210, TextBox29, TextBox28, 10, v1, v2, v3, 2)
         End If
     End Sub
 
@@ -2162,6 +4057,8 @@
                 Next
                 ComboBox3102.Items.Add("X")
                 ComboBox3102.Enabled = True
+                ComboBox3103.Items.Clear()
+                TextBox310.Text = ""
             Else
                 ComboBox3102.Items.Clear()
                 For i As Integer = 0 To (9 - value) Step 1
@@ -2169,6 +4066,8 @@
                 Next
                 ComboBox3102.Items.Add("/")
                 ComboBox3102.Enabled = True
+                ComboBox3103.Items.Clear()
+                TextBox310.Text = ""
             End If
         End If
     End Sub
@@ -2183,12 +4082,35 @@
         If Not String.IsNullOrEmpty(value1) And Not String.IsNullOrEmpty(value2) Then
             If value1.Equals("X") Then
                 ComboBox3103.Enabled = True
+                If Not value2.Equals("X") Then
+                    ComboBox3103.Items.Clear()
+                    For i As Integer = 0 To (9 - CInt(value2)) Step 1
+                        ComboBox3103.Items.Add(i)
+                    Next
+                    ComboBox3103.Items.Add("/")
+                Else
+                    ComboBox3103.Items.Clear()
+                    For i As Integer = 0 To 9 Step 1
+                        ComboBox3103.Items.Add(i)
+                    Next
+                    ComboBox3103.Items.Add("X")
+                End If
+                TextBox310.Text = ""
             Else
                 If value2.Equals("/") Then
+                    ComboBox3103.Items.Clear()
+                    For i As Integer = 0 To 9 Step 1
+                        ComboBox3103.Items.Add(i)
+                    Next
+                    ComboBox3103.Items.Add("X")
                     ComboBox3103.Enabled = True
+                    TextBox310.Text = ""
                 Else
+                    v1 = CInt(value1)
+                    v2 = CInt(value2)
                     ComboBox3103.Enabled = False
-                    Calculate(TextBox310, TextBox39, TextBox38, 10, v1, v2, 0, 1)
+                    ComboBox3103.Items.Clear()
+                    Calculate(TextBox310, TextBox39, TextBox38, 10, v1, v2, 0, 3)
                 End If
             End If
         End If
@@ -2210,6 +4132,7 @@
             Else
                 v1 = CInt(value1)
             End If
+
             If value2.Equals("X") Then
                 v2 = 10
             ElseIf value2.Equals("/") Then
@@ -2217,12 +4140,16 @@
             Else
                 v2 = CInt(value2)
             End If
+
             If value3.Equals("X") Then
                 v3 = 10
+            ElseIf value3.Equals("/") Then
+                v3 = 10 - v2
             Else
                 v3 = CInt(value3)
             End If
-            Calculate(TextBox310, TextBox39, TextBox38, 10, v1, v2, v3, 1)
+
+            Calculate(TextBox310, TextBox39, TextBox38, 10, v1, v2, v3, 3)
         End If
     End Sub
 
@@ -2570,6 +4497,8 @@
                 Next
                 ComboBox4102.Items.Add("X")
                 ComboBox4102.Enabled = True
+                ComboBox4103.Items.Clear()
+                TextBox410.Text = ""
             Else
                 ComboBox4102.Items.Clear()
                 For i As Integer = 0 To (9 - value) Step 1
@@ -2577,6 +4506,8 @@
                 Next
                 ComboBox4102.Items.Add("/")
                 ComboBox4102.Enabled = True
+                ComboBox4103.Items.Clear()
+                TextBox410.Text = ""
             End If
         End If
     End Sub
@@ -2591,13 +4522,35 @@
         If Not String.IsNullOrEmpty(value1) And Not String.IsNullOrEmpty(value2) Then
             If value1.Equals("X") Then
                 ComboBox4103.Enabled = True
+                If Not value2.Equals("X") Then
+                    ComboBox4103.Items.Clear()
+                    For i As Integer = 0 To (9 - CInt(value2)) Step 1
+                        ComboBox4103.Items.Add(i)
+                    Next
+                    ComboBox4103.Items.Add("/")
+                Else
+                    ComboBox4103.Items.Clear()
+                    For i As Integer = 0 To 9 Step 1
+                        ComboBox4103.Items.Add(i)
+                    Next
+                    ComboBox4103.Items.Add("X")
+                End If
+                TextBox410.Text = ""
             Else
                 If value2.Equals("/") Then
+                    ComboBox4103.Items.Clear()
+                    For i As Integer = 0 To 9 Step 1
+                        ComboBox4103.Items.Add(i)
+                    Next
+                    ComboBox4103.Items.Add("X")
                     ComboBox4103.Enabled = True
+                    TextBox410.Text = ""
                 Else
-                    ComboBox4103.Enabled = False
-                    Calculate(TextBox410, TextBox49, TextBox48, 10, v1, v2, 0, 1)
-
+                    v1 = CInt(value1)
+                    v2 = CInt(value2)
+                    ComboBox1101.Enabled = False
+                    ComboBox4103.Items.Clear()
+                    Calculate(TextBox410, TextBox49, TextBox48, 10, v1, v2, 0, 4)
                 End If
             End If
         End If
@@ -2619,6 +4572,7 @@
             Else
                 v1 = CInt(value1)
             End If
+
             If value2.Equals("X") Then
                 v2 = 10
             ElseIf value2.Equals("/") Then
@@ -2626,18 +4580,27 @@
             Else
                 v2 = CInt(value2)
             End If
+
             If value3.Equals("X") Then
                 v3 = 10
+            ElseIf value3.Equals("/") Then
+                v3 = 10 - v2
             Else
                 v3 = CInt(value3)
             End If
-            Calculate(TextBox410, TextBox49, TextBox48, 10, v1, v2, v3, 1)
+
+            Calculate(TextBox410, TextBox49, TextBox48, 10, v1, v2, v3, 4)
         End If
     End Sub
 
     'this is the final piece of the puzzle. There is a clear button that just resets the page and clears
     'out all frame values and spare or strike flags.
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Name1.Text = "Enter Name"
+        Name2.Text = "Enter Name"
+        Name3.Text = "Enter Name"
+        Name4.Text = "Enter Name"
+
         TextBox11.Text = ""
         TextBox12.Text = ""
         TextBox13.Text = ""

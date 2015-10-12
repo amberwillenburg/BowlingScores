@@ -24,3 +24,10 @@ C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\bin\De
 C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\obj\Debug\BowlingScores.exe
 C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\obj\Debug\BowlingScores.xml
 C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\obj\Debug\BowlingScores.pdb
+C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\bin\Debug\BowlingScores.exe
+C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\bin\Debug\BowlingScores.pdb
+C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\bin\Debug\BowlingScores.xml
+C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\obj\Debug\BowlingScores.vbprojResolveAssemblyReference.cache
+C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\obj\Debug\BowlingScores.Form1.resources
+C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\obj\Debug\BowlingScores.Resources.resources
+C:\Users\Amber\Documents\GitHub\BowlingScores\BowlingScores\BowlingScores\obj\Debug\BowlingScores.vbproj.GenerateResource.Cache
